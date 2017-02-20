@@ -1,0 +1,308 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B22A46941E5B221E00BE3741 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46931E5B221E00BE3741 /* AppDelegate.swift */; };
+		B22A46961E5B221E00BE3741 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46951E5B221E00BE3741 /* ViewController.swift */; };
+		B22A46981E5B221E00BE3741 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22A46971E5B221E00BE3741 /* Assets.xcassets */; };
+		B22A469B1E5B221E00BE3741 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22A46991E5B221E00BE3741 /* Main.storyboard */; };
+		B22A46A31E5B22F900BE3741 /* SVRobot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46A21E5B22F900BE3741 /* SVRobot.swift */; };
+		B22A46A51E5B23A600BE3741 /* SVObstacle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46A41E5B23A600BE3741 /* SVObstacle.swift */; };
+		B22A46A71E5B248100BE3741 /* SVInputReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46A61E5B248100BE3741 /* SVInputReader.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B22A46901E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scenario Week 4 Swarm Visualiser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B22A46931E5B221E00BE3741 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B22A46951E5B221E00BE3741 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B22A46971E5B221E00BE3741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B22A469A1E5B221E00BE3741 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B22A469C1E5B221E00BE3741 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B22A46A21E5B22F900BE3741 /* SVRobot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVRobot.swift; sourceTree = "<group>"; };
+		B22A46A41E5B23A600BE3741 /* SVObstacle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVObstacle.swift; sourceTree = "<group>"; };
+		B22A46A61E5B248100BE3741 /* SVInputReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVInputReader.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B22A468D1E5B221E00BE3741 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B22A46871E5B221E00BE3741 = {
+			isa = PBXGroup;
+			children = (
+				B22A46921E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser */,
+				B22A46911E5B221E00BE3741 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B22A46911E5B221E00BE3741 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B22A46901E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B22A46921E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser */ = {
+			isa = PBXGroup;
+			children = (
+				B22A46931E5B221E00BE3741 /* AppDelegate.swift */,
+				B22A46A21E5B22F900BE3741 /* SVRobot.swift */,
+				B22A46A41E5B23A600BE3741 /* SVObstacle.swift */,
+				B22A46A61E5B248100BE3741 /* SVInputReader.swift */,
+				B22A46951E5B221E00BE3741 /* ViewController.swift */,
+				B22A46971E5B221E00BE3741 /* Assets.xcassets */,
+				B22A46991E5B221E00BE3741 /* Main.storyboard */,
+				B22A469C1E5B221E00BE3741 /* Info.plist */,
+			);
+			path = "Scenario Week 4 Swarm Visualiser";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B22A468F1E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B22A469F1E5B221E00BE3741 /* Build configuration list for PBXNativeTarget "Scenario Week 4 Swarm Visualiser" */;
+			buildPhases = (
+				B22A468C1E5B221E00BE3741 /* Sources */,
+				B22A468D1E5B221E00BE3741 /* Frameworks */,
+				B22A468E1E5B221E00BE3741 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Scenario Week 4 Swarm Visualiser";
+			productName = "Scenario Week 4 Swarm Visualiser";
+			productReference = B22A46901E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B22A46881E5B221E00BE3741 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = UCL;
+				TargetAttributes = {
+					B22A468F1E5B221E00BE3741 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = PL9D4W4S2M;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = B22A468B1E5B221E00BE3741 /* Build configuration list for PBXProject "Scenario Week 4 Swarm Visualiser" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B22A46871E5B221E00BE3741;
+			productRefGroup = B22A46911E5B221E00BE3741 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B22A468F1E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B22A468E1E5B221E00BE3741 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B22A46981E5B221E00BE3741 /* Assets.xcassets in Resources */,
+				B22A469B1E5B221E00BE3741 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B22A468C1E5B221E00BE3741 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B22A46961E5B221E00BE3741 /* ViewController.swift in Sources */,
+				B22A46A51E5B23A600BE3741 /* SVObstacle.swift in Sources */,
+				B22A46A71E5B248100BE3741 /* SVInputReader.swift in Sources */,
+				B22A46A31E5B22F900BE3741 /* SVRobot.swift in Sources */,
+				B22A46941E5B221E00BE3741 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B22A46991E5B221E00BE3741 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B22A469A1E5B221E00BE3741 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B22A469D1E5B221E00BE3741 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B22A469E1E5B221E00BE3741 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		B22A46A01E5B221E00BE3741 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = PL9D4W4S2M;
+				INFOPLIST_FILE = "Scenario Week 4 Swarm Visualiser/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "UCL.Scenario-Week-4-Swarm-Visualiser";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		B22A46A11E5B221E00BE3741 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = PL9D4W4S2M;
+				INFOPLIST_FILE = "Scenario Week 4 Swarm Visualiser/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "UCL.Scenario-Week-4-Swarm-Visualiser";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B22A468B1E5B221E00BE3741 /* Build configuration list for PBXProject "Scenario Week 4 Swarm Visualiser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B22A469D1E5B221E00BE3741 /* Debug */,
+				B22A469E1E5B221E00BE3741 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B22A469F1E5B221E00BE3741 /* Build configuration list for PBXNativeTarget "Scenario Week 4 Swarm Visualiser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B22A46A01E5B221E00BE3741 /* Debug */,
+				B22A46A11E5B221E00BE3741 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B22A46881E5B221E00BE3741 /* Project object */;
+}
