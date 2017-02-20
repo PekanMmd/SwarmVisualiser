@@ -10,8 +10,22 @@ import Cocoa
 
 class SVRobot: NSObject {
 	
+	private var activated = false
+	
+	var isActive : Bool {
+		get {
+			return self.activated
+		}
+	}
+	
 	var x : Double!
 	var y : Double!
+	
+	var coordinate : CGPoint {
+		get {
+			return CGPoint(x: x, y: y)
+		}
+	}
 
 	init(x: Double, y: Double) {
 		super.init()
@@ -19,6 +33,10 @@ class SVRobot: NSObject {
 		self.x = x
 		self.y = y
 		
+	}
+	
+	func activate() {
+		self.activated = true
 	}
 
 }

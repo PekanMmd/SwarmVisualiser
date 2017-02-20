@@ -10,25 +10,25 @@ import Cocoa
 
 class SVInputReader: NSObject {
 	
-	class func readInput(inputFilename : String) -> ([SVRobot],[SVObstacle]) {
+	class func readInput(inputFilename : String) -> SVInstance {
 		
 		let input = getTextFromInputFile(filename: inputFilename)
 		let objects = separateObjectStringsFromTextFile(text: input)
 		
-		var robots = [SVRobot]()
-		var obstacles = [SVObstacle]()
+		var swarm = SVSwarm()
+		var map = SVMap()
 		
 		for object in objects {
 			if stringRepresentsRobot(rep: object) {
-				let rob = createRobotFromString(rep: object)
-				robots.append(rob)
+				let robot = createRobotFromString(rep: object)
+				swarm.append(robot)
 			} else {
-				let obs = createObstacleFromString(rep: object)
-				obstacles.append(obs)
+				let obstacle = createObstacleFromString(rep: object)
+				map.append(obstacle)
 			}
 		}
 		
-		return (robots,obstacles)
+		return (swarm,map)
 	}
 	
 	private class func getTextFromInputFile(filename: String) -> String {

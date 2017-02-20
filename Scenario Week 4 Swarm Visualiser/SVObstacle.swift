@@ -10,12 +10,14 @@ import Cocoa
 
 class SVObstacle: NSObject {
 	
-	var coordinates : [ (x:Double,y:Double) ]!
+	var coordinates : SVPolygon!
 	
-	init(coordinates : [ (x:Double,y:Double) ]) {
+	init(coordinates : [(Double,Double)]) {
 		super.init()
-		
-		self.coordinates = coordinates
+		let co = coordinates.map { (coords: (x: Double, y: Double)) -> CGPoint in
+			return CGPoint(x: coords.x, y: coords.y)
+		}
+		self.coordinates = co
 	}
 
 }
