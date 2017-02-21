@@ -80,26 +80,7 @@ class SVInputReader: SVIOReader {
 	
 	private class func separateObstacleStringIntoCoordinates(rep: String) -> [String] {
 		
-        var arrayOfCoordinates = [String]()
-        var stringOfSingleCoordinates = ""
-        
-        var isWithinParentheses = false
-        for i in rep.characters {
-                if (i == "("){
-                    isWithinParentheses = true
-                    stringOfSingleCoordinates.append(i)
-                } else if (i == ")"){
-                    stringOfSingleCoordinates.append(i)
-                    arrayOfCoordinates.append(stringOfSingleCoordinates)
-                    stringOfSingleCoordinates = ""
-                    isWithinParentheses = false
-                } else if (isWithinParentheses){
-                    stringOfSingleCoordinates.append(i)
-                }
-        }
-        
-        
-		return arrayOfCoordinates
+        return separateCoordinateListString(rep: rep)
 	}
 	
 	private class func createRobotFromString(rep: String) -> SVRobot {
