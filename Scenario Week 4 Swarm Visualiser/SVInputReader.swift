@@ -9,6 +9,7 @@
 import Cocoa
 
 class SVInputReader: NSObject {
+    
 	
 	class func readInput(inputFilename : String) -> SVInstance {
 		
@@ -21,6 +22,7 @@ class SVInputReader: NSObject {
 		for object in objects {
 			if stringRepresentsRobot(rep: object) {
 				let robot = createRobotFromString(rep: object)
+                print("robot: \(robot.x) \(robot.y)")
 				swarm.append(robot)
 			} else {
 				let obstacle = createObstacleFromString(rep: object)
@@ -90,9 +92,27 @@ class SVInputReader: NSObject {
 	
 	private class func separateObstacleStringIntoCoordinates(rep: String) -> [String] {
 		
-		//TODO: - Complete implementation
-		
-		return [String]()
+        
+        var arrayOfCoordinates = [String]()
+        var stringOfSingleCoordinates = ""
+        
+        var isWithinParentheses = false
+        for i in rep.characters {
+                if (i == "("){
+                    isWithinParentheses = true
+                    stringOfSingleCoordinates.append(i)
+                } else if (i == ")"){
+                    stringOfSingleCoordinates.append(i)
+                    arrayOfCoordinates.append(stringOfSingleCoordinates)
+                    stringOfSingleCoordinates = ""
+                    isWithinParentheses = false
+                } else if (isWithinParentheses){
+                    stringOfSingleCoordinates.append(i)
+                }
+        }
+        
+        
+		return arrayOfCoordinates
 	}
 	
 	private class func convertStringToCoordinates(rep: String) -> (x:Double, y:Double) {
@@ -115,7 +135,7 @@ class SVInputReader: NSObject {
 		let xcoordinate = Double(xcoordinateString) ?? 0
 		let ycoordinate = Double(ycoordinateString) ?? 0
 		
-		return (xcoordinate,ycoordinate)
+		return ((xcoordinate + 10)*50,(ycoordinate + 10) * 50)
 	}
 	
 	private class func createRobotFromString(rep: String) -> SVRobot {
