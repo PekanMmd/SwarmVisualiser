@@ -32,12 +32,37 @@ class SVInputReader: NSObject {
 	}
 	
 	private class func getTextFromInputFile(filename: String) -> String {
-		
-		return ""
+        var contents = ""
+        if let filepath = Bundle.main.path(forResource: "robots1", ofType: "txt") {
+            do {
+                contents = try String(contentsOfFile: filepath)
+                
+            } catch {
+                // contents could not be loaded
+            }
+        } else {
+            // example.txt not found!
+        }
+        return contents
 	}
 	
 	private class func separateObjectStringsFromTextFile(text: String) -> [String] {
-		
+        var arrayOfObjects = [String]()
+        var objectCount = 0
+        for i in text.characters {
+            if(i != "#"){
+                //add code here to append character i to arrayOfObjects[objectCount]
+                if(i == ")"){
+                    //add code here to append character i to arrayOfObjects[objectCount]
+                    objectCount = objectCount + 1
+                }
+                                    
+            }
+        }
+        
+        
+        
+       
 		return [String]()
 	}
 	
