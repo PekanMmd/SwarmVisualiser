@@ -23,9 +23,7 @@ class ViewController: NSViewController {
 		let inputFile = Bundle.main.path(forResource: "robots1", ofType: "txt") ?? ""
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
-		//instance = ([SVRobot(x:0,y:0)],[SVObstacle(coordinates: [(0,0),(100,100),(200,0)])])
-		
-		display = SVDisplayView(frame: frameFromInstance())
+		display = SVDisplayView(frame: self.view.frame , svFrame: frameFromInstance())
 		
 		self.display.translatesAutoresizingMaskIntoConstraints = false
 		self.view.addSubview(display)
@@ -33,6 +31,8 @@ class ViewController: NSViewController {
 		self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[d]|", options: [], metrics: nil, views: ["d" : display]))
 		
 	}
+	
+	
 	
 	func beginVisualisation() {
 		frameTimer = Timer.scheduledTimer(timeInterval: 1.0 / frameRate, target: self, selector: #selector(update), userInfo: nil, repeats: true)

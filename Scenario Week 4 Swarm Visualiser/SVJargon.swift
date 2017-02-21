@@ -20,5 +20,7 @@ typealias SVPolygon = [CGPoint]
 // Drawing
 typealias SVFramesPerSecond = Double
 typealias SVRobotFrame = CGPoint
+//typealias SVRobotFrame = (position:CGPoint,active:Bool)
 typealias SVObstacleFrame = SVPolygon
 typealias SVFrame = (robots: [SVRobotFrame], obstacles: [SVObstacleFrame])
+typealias SVScaleFactor = CGFloat

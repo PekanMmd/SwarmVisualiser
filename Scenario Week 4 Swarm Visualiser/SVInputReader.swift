@@ -21,7 +21,6 @@ class SVInputReader: SVIOReader {
 		for object in objects {
 			if stringRepresentsRobot(rep: object) {
 				let robot = createRobotFromString(rep: object)
-                print("robot: \(robot.x) \(robot.y)")
 				swarm.append(robot)
 			} else {
 				let obstacle = createObstacleFromString(rep: object)

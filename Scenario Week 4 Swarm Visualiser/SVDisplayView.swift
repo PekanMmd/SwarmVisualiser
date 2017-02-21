@@ -10,34 +10,152 @@ import Cocoa
 
 class SVDisplayView: NSView {
 	
-	var displayFrame : SVFrame!
+	let kWindowTitleHeight : CGFloat = 20
 	
-	init(frame: SVFrame) {
-		super.init(frame: NSZeroRect)
-		self.displayFrame = frame
+	var framePaddingX : CGFloat {
+		get {
+			return self.frame.width / 100
+		}
+	}
+	
+	var framePaddingY : CGFloat {
+		get {
+			return self.frame.height / 100
+		}
+	}
+	
+	let kRobotRadius : CGFloat = 1
+	
+	var robotDiammeter : CGFloat {
+		get {
+			return 1 + (2 * kRobotRadius)
+		}
+	}
+	
+	var displayFrame  : SVFrame!
+	var originalFrame : SVFrame!
+	
+	var minx : CGFloat = 0
+	var miny : CGFloat = 0
+	var maxx : CGFloat = 0
+	var maxy : CGFloat = 0
+	
+	var scaleFactorX : SVScaleFactor {
+		get {
+			return (self.frame.width - (framePaddingX * 2)) / (maxx - minx)
+		}
+	}
+	
+	var scaleFactorY : SVScaleFactor {
+		get {
+			return (self.frame.height - (framePaddingY * 2) - kWindowTitleHeight) / (maxy - miny)
+		}
+	}
+	
+	var scaleFactor : SVScaleFactor {
+		get {
+			return min(scaleFactorX, scaleFactorY)
+		}
+	}
+
+	
+	init(frame: NSRect, svFrame: SVFrame) {
+		super.init(frame: frame)
+		self.updateWithFrame(frame: svFrame)
 	}
 	
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
 	
+	override func viewDidEndLiveResize() {
+		self.updateView()
+	}
+	
 	func updateWithFrame(frame: SVFrame) {
-		self.displayFrame = frame
-		self.needsDisplay = true
+		self.originalFrame = frame
+		self.updateView()
+	}
+	
+	func updateView() {
+		setMinsAndMaxsForFrame(frame: self.originalFrame)
+		let scaled = scaleFrame(frame: self.originalFrame)
+		self.displayFrame = scaled
+		self.setNeedsDisplay(self.frame)
+	}
+	
+	func setMinsAndMaxsForFrame(frame: SVFrame) {
+		
+		let startRobot = frame.robots[0]
+		minx = startRobot.x
+		miny = startRobot.y
+		maxx = startRobot.x
+		maxy = startRobot.y
+		
+		for robot in frame.robots {
+			compareMinMaxForPoint(point: robot)
+		}
+		
+		for obstacle in frame.obstacles {
+			for point in obstacle {
+				compareMinMaxForPoint(point: point)
+			}
+		}
+		
+	}
+	
+	func compareMinMaxForPoint(point: CGPoint) {
+		if point.x < minx {
+			minx = point.x
+		}
+		if point.x > maxx {
+			maxx = point.x
+		}
+		if point.y < miny {
+			miny = point.y
+		}
+		if point.y > maxy {
+			maxy = point.y
+		}
+	}
+	
+	func scaleFrame(frame: SVFrame) -> SVFrame {
+		
+		let robots = frame.robots.map({ (p:CGPoint) -> CGPoint in
+			scaleCoordinate(coord: p)
+		})
+		
+		let obstacles = frame.obstacles.map { (p: SVPolygon) -> SVPolygon in
+			scalePolygon(poly: p)
+		}
+		
+		return (robots,obstacles)
+	}
+	
+	func scaleCoordinate(coord: CGPoint) -> CGPoint {
+		
+		let x = (coord.x - minx) * scaleFactor + framePaddingX
+		let y = (coord.y - miny) * scaleFactor + framePaddingY
+		
+		return CGPoint(x: x, y: y)
+	}
+	
+	func scalePolygon(poly: SVPolygon) -> SVPolygon {
+		return poly.map({ (p:CGPoint) -> CGPoint in
+			scaleCoordinate(coord: p)
+		})
 	}
 	
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
+		
+		let context = NSGraphicsContext.current()!.cgContext
+		context.clear(self.frame)
+		
 		drawFrame()
     }
 	
 	func drawFrame() {
-//		drawLine(startx: 100, starty: 100, endx: 250, endy: 250, colour: SVDesign.colourRed())
-//		drawRobot(robot: CGPoint(x:150,y:325), colour: SVDesign.colourBlue())
-//		let shape = [(100,100),(120,120),(140,100)].map { (coords: (Int, Int)) -> CGPoint in
-//			return CGPoint(x: coords.0, y: coords.1)
-//		}
-//		drawPolygon(polygon: shape, lineColour: SVDesign.colourBlack(), fillColour: SVDesign.colourGreen())
 		
 		for obstacle in displayFrame.obstacles {
 			drawObstacle(obstacle: obstacle, colour: SVDesign.colourRed())
@@ -55,9 +173,8 @@ class SVDisplayView: NSView {
 		context.setStrokeColor(colour.cgColor)
 		context.setFillColor(colour.cgColor)
 		
-		context.addRect(CGRect(x: robot.x - 1, y: robot.y - 1, width: 3, height: 3))
-//		context.strokePath()
-		context.fillPath()
+		context.addRect(CGRect(x: robot.x - kRobotRadius, y: robot.y - kRobotRadius, width: robotDiammeter, height: robotDiammeter))
+		context.drawPath(using: .fillStroke)
 		
 	}
 	
@@ -98,8 +215,7 @@ class SVDisplayView: NSView {
 			}
 			
 			context.closePath()
-			context.fillPath()
-//			context.strokePath()
+			context.drawPath(using: .fillStroke)
 			
 		}
 		

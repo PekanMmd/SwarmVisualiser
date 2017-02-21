@@ -41,7 +41,7 @@ class SVIOReader {
 		let xcoordinate = Double(xcoordinateString) ?? 0
 		let ycoordinate = Double(ycoordinateString) ?? 0
 		
-		return ((xcoordinate + 10)*50,(ycoordinate + 10) * 50)
+		return (xcoordinate,ycoordinate)
 	}
 	
 	class func separateStringBySemiColons(rep: String) -> [String] {
