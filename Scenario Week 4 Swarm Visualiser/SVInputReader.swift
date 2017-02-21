@@ -33,19 +33,16 @@ class SVInputReader: NSObject {
 	
 	private class func getTextFromInputFile(filename: String) -> String {
         var contents = ""
-        if let filepath = Bundle.main.path(forResource: "robots1", ofType: "txt") {
-            do {
-                contents = try String(contentsOfFile: filepath)
-                
-            } catch {
-                // contents could not be loaded
-            }
-        } else {
-            // example.txt not found!
-        }
+		
+		do {
+			contents = try String(contentsOfFile: filename)
+		} catch {
+			print("Something went wrong. The input file could not be found!")
+		}
+	
         return contents
 	}
-	
+
 	private class func separateObjectStringsFromTextFile(text: String) -> [String] {
         var arrayOfObjects = [String]()
         var objectCount = 0
