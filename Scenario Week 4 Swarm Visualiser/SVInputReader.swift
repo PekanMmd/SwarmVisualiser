@@ -32,8 +32,7 @@ class SVInputReader: NSObject {
 	}
 	
 	private class func getTextFromInputFile(filename: String) -> String {
-        var contents = ""
-		
+		var contents = ""
 		do {
 			contents = try String(contentsOfFile: filename)
 		} catch {
@@ -44,23 +43,23 @@ class SVInputReader: NSObject {
 	}
 
 	private class func separateObjectStringsFromTextFile(text: String) -> [String] {
-        var countHashtag = 0
-        var countComma = 0
+        var hasReachedHashtag = false
+        var isWithinParentheses = false
         var stringOfObject = ""
         var arrayOfObjects = [String]()
         for i in text.characters {
-            if(countHashtag == 0){
-                if(i == "("){
-                    countComma = 0
+            if (!hasReachedHashtag){
+                if (i == "("){
+                    isWithinParentheses = true
                     stringOfObject.append(i)
                 } else if (i == "#"){
-                    countHashtag = 1
-                } else if(i == ")"){
+                    hasReachedHashtag = true
+                } else if (i == ")"){
                     stringOfObject.append(i)
                     arrayOfObjects.append(stringOfObject)
                     stringOfObject = ""
-                    countComma = 1
-                } else if (countComma < 1){
+                    isWithinParentheses = false
+                } else if (isWithinParentheses){
                     stringOfObject.append(i)
                 }
                 
@@ -74,24 +73,19 @@ class SVInputReader: NSObject {
             }
             
         }
-    
-        
-       
+		
 		return arrayOfObjects
 	}
 	
 	private class func stringRepresentsRobot(rep: String) -> Bool {
         var countComma = 0
         for i in rep.characters {
-            if(i == ",") {
-                countComma = countComma + 1
+            if (i == ",") {
+                countComma += 1
             }
         }
-        
-        if (countComma == 1){
-            return true
-        }
-        return false
+		
+		return countComma == 1
 	}
 	
 	private class func separateObstacleStringIntoCoordinates(rep: String) -> [String] {
@@ -132,40 +126,14 @@ class SVInputReader: NSObject {
 	}
 	
 	private class func createObstacleFromString(rep: String) -> SVObstacle {
+		
+		let points = separateObstacleStringIntoCoordinates(rep: rep)
+		var coords = [(Double,Double)]()
+		for point in points {
+			coords.append(convertStringToCoordinates(rep: point))
+		}
         
-        var xcoordinate: Double
-        var ycoordinate: Double
-        var xcoordinateString = ""
-        var ycoordinateString = ""
-        var comma = 0
-        
-        for i in rep.characters {
-            if (i == ","){
-                comma = comma + 1
-            }
-            if (i != "(" && comma == 0){
-                xcoordinateString.append(i)
-            }
-            if (i == "("){
-                comma = 0
-            }
-            if(i == ")") {
-                comma = 1
-                xcoordinate = Double(xcoordinateString)!
-                ycoordinate = Double(ycoordinateString)!
-                print("x:", xcoordinate)
-                print("y:", ycoordinate)
-                xcoordinateString = ""
-                ycoordinateString = ""
-
-                
-            }
-            if (i != ")" && comma == 1 && i != "," && i != " "){
-                ycoordinateString.append(i)
-            }
-        }
-        
-		return SVObstacle(coordinates: [(x:0,y:0)])
+		return SVObstacle(coordinates: coords)
 	}
 	
 
