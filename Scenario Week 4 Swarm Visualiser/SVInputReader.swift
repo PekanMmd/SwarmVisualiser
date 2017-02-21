@@ -47,9 +47,18 @@ class SVInputReader: NSObject {
 	}
 	
 	private class func separateObjectStringsFromTextFile(text: String) -> [String] {
-        var arrayOfObjects = [String]()
-        var objectCount = 0
+        var countHashtag = 0
+        var stringOfObject = ""
         for i in text.characters {
+            if(countHashtag == 0){
+                if(i == "("){
+                    stringOfObject.append("robot:")
+                    stringOfObjects.append(i)
+                } else if (i == "#"){
+                    countHashtag = 1
+                } else (stringOfObjects.append(i))
+                
+            }
             if(i != "#"){
                 //add code here to append character i to arrayOfObjects[objectCount]
                 if(i == ")"){
