@@ -8,7 +8,9 @@
 
 import Cocoa
 
-class SVColour: NSColor {
+typealias SVColour = NSColor
+
+extension SVColour {
 	
 	convenience init(hex: Double) {
 		let red   = Float( (hex  / 0x1000000) / 0xFF )
@@ -17,18 +19,6 @@ class SVColour: NSColor {
 		let alpha = Float( (hex.truncatingRemainder(dividingBy: 0x100) / 0xFF) )
 		
 		self.init(colorLiteralRed: red, green: green, blue: blue, alpha: alpha)
-	}
-	
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-	
-	required convenience init(colorLiteralRed red: Float, green: Float, blue: Float, alpha: Float) {
-		self.init(hex: 0x0)
-	}
-	
-	required init?(pasteboardPropertyList propertyList: Any, ofType type: String) {
-		super.init(pasteboardPropertyList: propertyList, ofType: type)
 	}
 }
 
@@ -52,6 +42,18 @@ class SVDesign: NSObject {
 	
 	class func sizeBottomButton() -> CGFloat {
 		return 60.0
+	}
+	
+	class func sizeLineWidth() -> CGFloat {
+		return 2.0
+	}
+	
+	class func sizeBorderWidth() -> CGFloat {
+		return 1.0
+	}
+	
+	class func sizePointWidth() -> CGFloat {
+		return 3.0
 	}
 	
 	

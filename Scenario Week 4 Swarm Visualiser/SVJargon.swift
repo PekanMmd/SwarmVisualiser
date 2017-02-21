@@ -16,4 +16,4 @@ typealias SVPolygon = [CGPoint]
 typealias SVFramesPerSecond = Double
 typealias SVRobotFrame = CGPoint
 typealias SVObstacleFrame = SVPolygon
-typealias SVFrame = (robots: [SVRobotFrame], obtacles: [SVObstacleFrame])
+typealias SVFrame = (robots: [SVRobotFrame], obstacles: [SVObstacleFrame])
