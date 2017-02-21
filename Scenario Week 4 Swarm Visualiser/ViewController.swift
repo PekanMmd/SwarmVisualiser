@@ -61,6 +61,18 @@ class ViewController: NSViewController {
 	
 	func updateInstance() {
 		
+		for robot1 in instance.swarm {
+			if robot1.isActive {
+				for robot2 in instance.swarm {
+					if !robot2.isActive {
+						if robot1.coordinate == robot2.coordinate {
+							robot2.activate()
+						}
+					}
+				}
+			}
+		}
+		
 	}
 
 	
