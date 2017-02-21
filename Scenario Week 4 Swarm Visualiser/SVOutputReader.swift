@@ -17,63 +17,12 @@ class SVOutputReader: SVIOReader {
 	}
 	
 	private class func separateBranchStringsFromTextFile(text: String) -> [String] {
-		var hasReachedHashtag = false
-		var isWithinParentheses = false
-		var stringOfObject = ""
-		var arrayOfObjects = [String]()
-//		for i in text.characters {
-//			if (!hasReachedHashtag){
-//				if (i == "("){
-//					isWithinParentheses = true
-//					stringOfObject.append(i)
-//				} else if (i == "#"){
-//					hasReachedHashtag = true
-//				} else if (i == ")"){
-//					stringOfObject.append(i)
-//					arrayOfObjects.append(stringOfObject)
-//					stringOfObject = ""
-//					isWithinParentheses = false
-//				} else if (isWithinParentheses){
-//					stringOfObject.append(i)
-//				}
-//				
-//			} else {
-//				if (i != ";"){
-//					stringOfObject.append(i)
-//				} else {
-//					arrayOfObjects.append(stringOfObject)
-//					stringOfObject = ""
-//				}
-//			}
-//			
-//		}
-		
-		return arrayOfObjects
+		return separateStringBySemiColons(rep: text)
 	}
 	
 	private class func separateBranchStringIntoCoordinates(rep: String) -> [String] {
 		
-		
-		var arrayOfCoordinates = [String]()
-		var stringOfSingleCoordinates = ""
-		
-		var isWithinParentheses = false
-		for i in rep.characters {
-			if (i == "("){
-				isWithinParentheses = true
-				stringOfSingleCoordinates.append(i)
-			} else if (i == ")"){
-				stringOfSingleCoordinates.append(i)
-				arrayOfCoordinates.append(stringOfSingleCoordinates)
-				stringOfSingleCoordinates = ""
-				isWithinParentheses = false
-			} else if (isWithinParentheses){
-				stringOfSingleCoordinates.append(i)
-			}
-		}
-		
-		
-		return arrayOfCoordinates
+		return separateCoordinateListString(rep: rep)
 	}
 	
 	

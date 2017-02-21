@@ -33,7 +33,7 @@ class SVIOReader {
 			}
 			if (i != "(" && comma == 0){
 				xcoordinateString.append(i)
-			} else if (i != ")" && comma == 1 && i != "," && i != " "){
+			} else if (i != ")" && comma == 1 && i != "," && i != " ") {
 				ycoordinateString.append(i)
 			}
 		}
@@ -76,6 +76,30 @@ class SVIOReader {
 		
 		return arrayOfObjects
     }
+	
+	class func separateCoordinateListString(rep: String) -> [String] {
+		
+		var arrayOfCoordinates = [String]()
+		var stringOfSingleCoordinates = ""
+		
+		var isWithinParentheses = false
+		for i in rep.characters {
+			if (i == "("){
+				isWithinParentheses = true
+				stringOfSingleCoordinates.append(i)
+			} else if (i == ")"){
+				stringOfSingleCoordinates.append(i)
+				arrayOfCoordinates.append(stringOfSingleCoordinates)
+				stringOfSingleCoordinates = ""
+				isWithinParentheses = false
+			} else if (isWithinParentheses){
+				stringOfSingleCoordinates.append(i)
+			}
+		}
+		
+		
+		return arrayOfCoordinates
+	}
 	
 }
 

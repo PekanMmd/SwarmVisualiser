@@ -8,11 +8,16 @@
 
 import Foundation
 
-
+// Input
 typealias SVSwarm = [SVRobot]
 typealias SVMap = [SVObstacle]
 typealias SVInstance = (swarm: SVSwarm, map: SVMap)
 typealias SVPolygon = [CGPoint]
+
+// Output
+//typealias SVOutputBranch = SVOutputTree
+
+// Drawing
 typealias SVFramesPerSecond = Double
 typealias SVRobotFrame = CGPoint
 typealias SVObstacleFrame = SVPolygon
