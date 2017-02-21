@@ -94,30 +94,41 @@ class SVInputReader: NSObject {
         return false
 	}
 	
-	private class func createRobotFromString(rep: String) -> SVRobot {
-        
-        var xcoordinateString = ""
-        var ycoordinateString = ""
-        var comma = 0
-        
-        for i in rep.characters {
-            if (i == ","){
-                comma = 1
-            }
-            if (i != "(" && comma == 0){
-                xcoordinateString.append(i)
-            } else if (i != ")" && comma == 1 && i != "," && i != " "){
-                ycoordinateString.append(i)
-            }
-        }
-        
-       
+	private class func separateObstacleStringIntoCoordinates(rep: String) -> [String] {
 		
-        let xcoordinate = Double(xcoordinateString)
-        let ycoordinate = Double(ycoordinateString)
-        
-        
-		return SVRobot(x:(xcoordinate)!,y:(ycoordinate)!)
+		//TODO: - Complete implementation
+		
+		return [String]()
+	}
+	
+	private class func convertStringToCoordinates(rep: String) -> (x:Double, y:Double) {
+		
+		var xcoordinateString = ""
+		var ycoordinateString = ""
+		var comma = 0
+		
+		for i in rep.characters {
+			if (i == ","){
+				comma = 1
+			}
+			if (i != "(" && comma == 0){
+				xcoordinateString.append(i)
+			} else if (i != ")" && comma == 1 && i != "," && i != " "){
+				ycoordinateString.append(i)
+			}
+		}
+		
+		let xcoordinate = Double(xcoordinateString) ?? 0
+		let ycoordinate = Double(ycoordinateString) ?? 0
+		
+		return (xcoordinate,ycoordinate)
+	}
+	
+	private class func createRobotFromString(rep: String) -> SVRobot {
+		
+		let coordinates = convertStringToCoordinates(rep: rep)
+		
+		return SVRobot(x:coordinates.x, y:coordinates.y)
 	}
 	
 	private class func createObstacleFromString(rep: String) -> SVObstacle {
