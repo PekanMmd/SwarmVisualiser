@@ -44,37 +44,116 @@ class SVInputReader: NSObject {
 	}
 
 	private class func separateObjectStringsFromTextFile(text: String) -> [String] {
+        var countHashtag = 0
+        var countComma = 0
+        var stringOfObject = ""
         var arrayOfObjects = [String]()
-        var objectCount = 0
         for i in text.characters {
-            if(i != "#"){
-                //add code here to append character i to arrayOfObjects[objectCount]
-                if(i == ")"){
-                    //add code here to append character i to arrayOfObjects[objectCount]
-                    objectCount = objectCount + 1
+            if(countHashtag == 0){
+                if(i == "("){
+                    countComma = 0
+                    stringOfObject.append(i)
+                } else if (i == "#"){
+                    countHashtag = 1
+                } else if(i == ")"){
+                    stringOfObject.append(i)
+                    arrayOfObjects.append(stringOfObject)
+                    stringOfObject = ""
+                    countComma = 1
+                } else if (countComma < 1){
+                    stringOfObject.append(i)
                 }
-                                    
+                
+            } else {
+                if (i != ";"){
+                    stringOfObject.append(i)
+                } else {
+                    arrayOfObjects.append(stringOfObject)
+                    stringOfObject = ""
+                }
             }
+            
         }
-        
-        
+    
         
        
-		return [String]()
+		return arrayOfObjects
 	}
 	
 	private class func stringRepresentsRobot(rep: String) -> Bool {
-		
-		return true
+        var countComma = 0
+        for i in rep.characters {
+            if(i == ",") {
+                countComma = countComma + 1
+            }
+        }
+        
+        if (countComma == 1){
+            return true
+        }
+        return false
 	}
 	
 	private class func createRobotFromString(rep: String) -> SVRobot {
+        
+        var xcoordinateString = ""
+        var ycoordinateString = ""
+        var comma = 0
+        
+        for i in rep.characters {
+            if (i == ","){
+                comma = 1
+            }
+            if (i != "(" && comma == 0){
+                xcoordinateString.append(i)
+            } else if (i != ")" && comma == 1 && i != "," && i != " "){
+                ycoordinateString.append(i)
+            }
+        }
+        
+       
 		
-		return SVRobot(x:0,y:0)
+        let xcoordinate = Double(xcoordinateString)
+        let ycoordinate = Double(ycoordinateString)
+        
+        
+		return SVRobot(x:(xcoordinate)!,y:(ycoordinate)!)
 	}
 	
 	private class func createObstacleFromString(rep: String) -> SVObstacle {
-		
+        
+        var xcoordinate: Double
+        var ycoordinate: Double
+        var xcoordinateString = ""
+        var ycoordinateString = ""
+        var comma = 0
+        
+        for i in rep.characters {
+            if (i == ","){
+                comma = comma + 1
+            }
+            if (i != "(" && comma == 0){
+                xcoordinateString.append(i)
+            }
+            if (i == "("){
+                comma = 0
+            }
+            if(i == ")") {
+                comma = 1
+                xcoordinate = Double(xcoordinateString)!
+                ycoordinate = Double(ycoordinateString)!
+                print("x:", xcoordinate)
+                print("y:", ycoordinate)
+                xcoordinateString = ""
+                ycoordinateString = ""
+
+                
+            }
+            if (i != ")" && comma == 1 && i != "," && i != " "){
+                ycoordinateString.append(i)
+            }
+        }
+        
 		return SVObstacle(coordinates: [(x:0,y:0)])
 	}
 	
