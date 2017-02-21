@@ -46,11 +46,36 @@ class SVIOReader {
 	
 	class func separateStringBySemiColons(rep: String) -> [String] {
 		
+        var isWithinParentheses = false
+        var stringOfObject = ""
+        var arrayOfObjects = [String]()
+        for i in rep.characters {
+            if(i != ";") {
+                if (i == "("){
+                    isWithinParentheses = true
+                    stringOfObject.append(i)
+                } else if (i == ")"){
+                    stringOfObject.append(i)
+                    arrayOfObjects.append(stringOfObject)
+                    stringOfObject = ""
+                    isWithinParentheses = false
+                } else if (isWithinParentheses){
+                    stringOfObject.append(i)
+                }
+            }
+                
+            else {
+                    arrayOfObjects.append(stringOfObject)
+                    stringOfObject = ""
+                
+            }
+            
+        }
+
+		print(arrayOfObjects)
 		
-		
-		
-		return [String]()
-	}
+		return arrayOfObjects
+    }
 	
 	class func separateCoordinateListString(rep: String) -> [String] {
 		
