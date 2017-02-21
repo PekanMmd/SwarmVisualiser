@@ -56,7 +56,7 @@ class SVDisplayView: NSView {
 		context.setFillColor(colour.cgColor)
 		
 		context.addRect(CGRect(x: robot.x - 1, y: robot.y - 1, width: 3, height: 3))
-		context.strokePath()
+//		context.strokePath()
 		context.fillPath()
 		
 	}
@@ -99,6 +99,8 @@ class SVDisplayView: NSView {
 			
 			context.closePath()
 			context.fillPath()
+//			context.strokePath()
+			
 		}
 		
 	}

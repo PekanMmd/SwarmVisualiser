@@ -8,9 +8,8 @@
 
 import Cocoa
 
-class SVInputReader: NSObject {
+class SVInputReader: SVIOReader {
     
-	
 	class func readInput(inputFilename : String) -> SVInstance {
 		
 		let input = getTextFromInputFile(filename: inputFilename)
@@ -31,17 +30,6 @@ class SVInputReader: NSObject {
 		}
 		
 		return (swarm,map)
-	}
-	
-	private class func getTextFromInputFile(filename: String) -> String {
-		var contents = ""
-		do {
-			contents = try String(contentsOfFile: filename)
-		} catch {
-			print("Something went wrong. The input file could not be found!")
-		}
-	
-        return contents
 	}
 
 	private class func separateObjectStringsFromTextFile(text: String) -> [String] {
@@ -92,7 +80,6 @@ class SVInputReader: NSObject {
 	
 	private class func separateObstacleStringIntoCoordinates(rep: String) -> [String] {
 		
-        
         var arrayOfCoordinates = [String]()
         var stringOfSingleCoordinates = ""
         
@@ -113,29 +100,6 @@ class SVInputReader: NSObject {
         
         
 		return arrayOfCoordinates
-	}
-	
-	private class func convertStringToCoordinates(rep: String) -> (x:Double, y:Double) {
-		
-		var xcoordinateString = ""
-		var ycoordinateString = ""
-		var comma = 0
-		
-		for i in rep.characters {
-			if (i == ","){
-				comma = 1
-			}
-			if (i != "(" && comma == 0){
-				xcoordinateString.append(i)
-			} else if (i != ")" && comma == 1 && i != "," && i != " "){
-				ycoordinateString.append(i)
-			}
-		}
-		
-		let xcoordinate = Double(xcoordinateString) ?? 0
-		let ycoordinate = Double(ycoordinateString) ?? 0
-		
-		return ((xcoordinate + 10)*50,(ycoordinate + 10) * 50)
 	}
 	
 	private class func createRobotFromString(rep: String) -> SVRobot {
