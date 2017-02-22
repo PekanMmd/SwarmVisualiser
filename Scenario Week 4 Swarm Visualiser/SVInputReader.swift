@@ -35,6 +35,7 @@ class SVInputReader: SVIOReader {
         var hasReachedHashtag = false
         var isWithinParentheses = false
         var stringOfObject = ""
+        var obstaclesString = ""
         var arrayOfObjects = [String]()
         for i in text.characters {
             if (!hasReachedHashtag){
@@ -53,16 +54,15 @@ class SVInputReader: SVIOReader {
                 }
                 
             } else {
-                if (i != ";"){
-                    stringOfObject.append(i)
-                } else {
-                    arrayOfObjects.append(stringOfObject)
-                    stringOfObject = ""
-                }
+                
+                obstaclesString.append(i)
             }
             
         }
+		
 		arrayOfObjects.append(stringOfObject)
+        
+        arrayOfObjects += separateStringBySemiColons(rep: obstaclesString)
 		
 		return arrayOfObjects
 	}

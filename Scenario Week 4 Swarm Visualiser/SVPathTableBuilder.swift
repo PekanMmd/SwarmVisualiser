@@ -331,7 +331,7 @@ class SVPathTableBuilder: NSObject {
 	}
 	
 	
-	func createTable(instance: SVInstance) -> SVPath {
+	func createTable(instance: SVInstance) {
 		
 		self.instance = instance
 		self.allEdges = edgesFromMap(map: instance.map)
