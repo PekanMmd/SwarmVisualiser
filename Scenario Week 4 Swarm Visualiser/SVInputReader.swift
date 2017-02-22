@@ -21,7 +21,6 @@ class SVInputReader: SVIOReader {
 		for object in objects {
 			if stringRepresentsRobot(rep: object) {
 				let robot = createRobotFromString(rep: object)
-                print("robot: \(robot.x) \(robot.y)")
 				swarm.append(robot)
 			} else {
 				let obstacle = createObstacleFromString(rep: object)
@@ -36,6 +35,7 @@ class SVInputReader: SVIOReader {
         var hasReachedHashtag = false
         var isWithinParentheses = false
         var stringOfObject = ""
+        var obstaclesString = ""
         var arrayOfObjects = [String]()
         for i in text.characters {
             if (!hasReachedHashtag){
@@ -54,15 +54,13 @@ class SVInputReader: SVIOReader {
                 }
                 
             } else {
-                if (i != ";"){
-                    stringOfObject.append(i)
-                } else {
-                    arrayOfObjects.append(stringOfObject)
-                    stringOfObject = ""
-                }
+                
+                obstaclesString.append(i)
             }
             
         }
+        
+        arrayOfObjects += separateStringBySemiColons(rep: obstaclesString)
 		
 		return arrayOfObjects
 	}

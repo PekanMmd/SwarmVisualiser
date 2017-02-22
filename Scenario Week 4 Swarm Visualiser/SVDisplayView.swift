@@ -28,6 +28,7 @@ class SVDisplayView: NSView {
 	
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
+        self.layer?.backgroundColor = SVDesign.colourWhite().cgColor
 		drawFrame()
     }
 	

@@ -51,19 +51,8 @@ class SVIOReader {
         var arrayOfObjects = [String]()
         for i in rep.characters {
             if(i != ";") {
-                if (i == "("){
-                    isWithinParentheses = true
-                    stringOfObject.append(i)
-                } else if (i == ")"){
-                    stringOfObject.append(i)
-                    arrayOfObjects.append(stringOfObject)
-                    stringOfObject = ""
-                    isWithinParentheses = false
-                } else if (isWithinParentheses){
-                    stringOfObject.append(i)
-                }
+                stringOfObject.append(i)
             }
-                
             else {
                     arrayOfObjects.append(stringOfObject)
                     stringOfObject = ""
@@ -72,7 +61,6 @@ class SVIOReader {
             
         }
 
-		print(arrayOfObjects)
 		
 		return arrayOfObjects
     }
