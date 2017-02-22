@@ -62,6 +62,7 @@ class SVInputReader: SVIOReader {
             }
             
         }
+		arrayOfObjects.append(stringOfObject)
 		
 		return arrayOfObjects
 	}

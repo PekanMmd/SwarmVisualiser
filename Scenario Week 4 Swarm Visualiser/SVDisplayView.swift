@@ -165,7 +165,17 @@ class SVDisplayView: NSView {
 		}
 		
 		for robot in displayFrame.robots {
-			drawRobot(robot: robot, colour: SVDesign.colourBlue())
+			
+			let zeroPoint = scaleCoordinate(coord: CGPoint(x: 0, y: 0))
+			let twPoint = scaleCoordinate(coord: CGPoint(x: 10, y: 10))
+			
+			if robot.x == zeroPoint.x && robot.y == zeroPoint.y {
+				drawRobot(robot: robot, colour: SVDesign.colourGreen())
+			} else if robot.x == twPoint.x && robot.y == twPoint.y {
+				drawRobot(robot: robot, colour: SVDesign.colourPurple())
+			} else {
+				drawRobot(robot: robot, colour: SVDesign.colourBlue())
+			}
 		}
 	}
 	

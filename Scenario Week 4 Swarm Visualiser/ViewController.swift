@@ -20,7 +20,7 @@ class ViewController: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		let inputFile = Bundle.main.path(forResource: "demo1", ofType: "txt") ?? ""
+		let inputFile = Bundle.main.path(forResource: "robots1", ofType: "txt") ?? ""
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
 		display = SVDisplayView(frame: self.view.frame , svFrame: frameFromInstance())
@@ -29,6 +29,7 @@ class ViewController: NSViewController {
 		self.view.addSubview(display)
 		self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[d]|", options: [], metrics: nil, views: ["d" : display]))
 		self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[d]|", options: [], metrics: nil, views: ["d" : display]))
+		
 		
 	}
 	
@@ -61,17 +62,6 @@ class ViewController: NSViewController {
 	
 	func updateInstance() {
 		
-//		for robot1 in instance.swarm {
-//			if robot1.isActive {
-//				for robot2 in instance.swarm {
-//					if !robot2.isActive {
-//						if robot1.coordinate == robot2.coordinate {
-//							robot2.activate()
-//						}
-//					}
-//				}
-//			}
-//		}
 		
 	}
 
@@ -79,16 +69,10 @@ class ViewController: NSViewController {
 	func frameFromInstance() -> SVFrame {
 		
 		var roboPoints = [CGPoint]()
-//		var polygons = [SVPolygon]()
 		
 		for robot in instance.swarm {
 			roboPoints.append(robot.current)
 		}
-		
-//		for obstacle in instance.map {
-//			polygons.append(obstacle)
-//		}
-		
 		return (roboPoints,instance.map)
 	}
 	
