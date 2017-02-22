@@ -41,12 +41,11 @@ class SVIOReader {
 		let xcoordinate = Double(xcoordinateString) ?? 0
 		let ycoordinate = Double(ycoordinateString) ?? 0
 		
-		return ((xcoordinate + 10)*50,(ycoordinate + 10) * 50)
+		return (xcoordinate,ycoordinate)
 	}
 	
 	class func separateStringBySemiColons(rep: String) -> [String] {
-		
-        var isWithinParentheses = false
+        
         var stringOfObject = ""
         var arrayOfObjects = [String]()
         for i in rep.characters {
@@ -54,17 +53,15 @@ class SVIOReader {
                 stringOfObject.append(i)
             }
             else {
-                    arrayOfObjects.append(stringOfObject)
-                    stringOfObject = ""
-                
+                arrayOfObjects.append(stringOfObject)
+                stringOfObject = ""
             }
-            
         }
-
-		
-		return arrayOfObjects
+        arrayOfObjects.append(stringOfObject)
+        
+        return arrayOfObjects
     }
-	
+    
 	class func separateCoordinateListString(rep: String) -> [String] {
 		
 		var arrayOfCoordinates = [String]()

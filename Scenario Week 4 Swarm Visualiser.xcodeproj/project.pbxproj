@@ -20,6 +20,9 @@
 		B22A46AD1E5B7B0900BE3741 /* SVDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46AC1E5B7B0900BE3741 /* SVDesign.swift */; };
 		B2FAF6A31E5C83EA00446E8A /* SVOutputReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FAF6A21E5C83EA00446E8A /* SVOutputReader.swift */; };
 		B2FAF6A51E5C86EF00446E8A /* SVIOReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FAF6A41E5C86EF00446E8A /* SVIOReader.swift */; };
+		B2FAF6A71E5CC31200446E8A /* SVProblemSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FAF6A61E5CC31200446E8A /* SVProblemSolver.swift */; };
+		B2FAF6A91E5D19A000446E8A /* demo1.txt in Resources */ = {isa = PBXBuildFile; fileRef = B2FAF6A81E5D19A000446E8A /* demo1.txt */; };
+		B2FAF6AB1E5DE82500446E8A /* SVPathTableBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FAF6AA1E5DE82500446E8A /* SVPathTableBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,9 @@
 		B22A46AC1E5B7B0900BE3741 /* SVDesign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVDesign.swift; sourceTree = "<group>"; };
 		B2FAF6A21E5C83EA00446E8A /* SVOutputReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVOutputReader.swift; sourceTree = "<group>"; };
 		B2FAF6A41E5C86EF00446E8A /* SVIOReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVIOReader.swift; sourceTree = "<group>"; };
+		B2FAF6A61E5CC31200446E8A /* SVProblemSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVProblemSolver.swift; sourceTree = "<group>"; };
+		B2FAF6A81E5D19A000446E8A /* demo1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = demo1.txt; sourceTree = "<group>"; };
+		B2FAF6AA1E5DE82500446E8A /* SVPathTableBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVPathTableBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,13 +77,16 @@
 			isa = PBXGroup;
 			children = (
 				8D568DDE1E5B9F5400E13844 /* robots1.txt */,
+				B2FAF6A81E5D19A000446E8A /* demo1.txt */,
 				B22A46931E5B221E00BE3741 /* AppDelegate.swift */,
 				B22A46A21E5B22F900BE3741 /* SVRobot.swift */,
+				B2FAF6AA1E5DE82500446E8A /* SVPathTableBuilder.swift */,
 				B22A46A41E5B23A600BE3741 /* SVObstacle.swift */,
 				B22A46A61E5B248100BE3741 /* SVInputReader.swift */,
 				B2FAF6A21E5C83EA00446E8A /* SVOutputReader.swift */,
 				B2FAF6A41E5C86EF00446E8A /* SVIOReader.swift */,
 				B22A46AC1E5B7B0900BE3741 /* SVDesign.swift */,
+				B2FAF6A61E5CC31200446E8A /* SVProblemSolver.swift */,
 				B22A46951E5B221E00BE3741 /* ViewController.swift */,
 				B22A46A81E5B740E00BE3741 /* SVDisplayView.swift */,
 				B22A46AA1E5B79A500BE3741 /* SVJargon.swift */,
@@ -149,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B22A46981E5B221E00BE3741 /* Assets.xcassets in Resources */,
+				B2FAF6A91E5D19A000446E8A /* demo1.txt in Resources */,
 				8D568DDF1E5B9F5400E13844 /* robots1.txt in Resources */,
 				B22A469B1E5B221E00BE3741 /* Main.storyboard in Resources */,
 			);
@@ -161,6 +171,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2FAF6AB1E5DE82500446E8A /* SVPathTableBuilder.swift in Sources */,
+				B2FAF6A71E5CC31200446E8A /* SVProblemSolver.swift in Sources */,
 				B22A46AB1E5B79A500BE3741 /* SVJargon.swift in Sources */,
 				B2FAF6A51E5C86EF00446E8A /* SVIOReader.swift in Sources */,
 				B22A46A91E5B740E00BE3741 /* SVDisplayView.swift in Sources */,

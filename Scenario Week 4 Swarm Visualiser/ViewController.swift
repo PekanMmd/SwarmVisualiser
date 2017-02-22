@@ -23,9 +23,7 @@ class ViewController: NSViewController {
 		let inputFile = Bundle.main.path(forResource: "robots1", ofType: "txt") ?? ""
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
-		//instance = ([SVRobot(x:0,y:0)],[SVObstacle(coordinates: [(0,0),(100,100),(200,0)])])
-		
-		display = SVDisplayView(frame: frameFromInstance())
+		display = SVDisplayView(frame: self.view.frame , svFrame: frameFromInstance())
 		
 		self.display.translatesAutoresizingMaskIntoConstraints = false
 		self.view.addSubview(display)
@@ -33,6 +31,8 @@ class ViewController: NSViewController {
 		self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[d]|", options: [], metrics: nil, views: ["d" : display]))
 		
 	}
+	
+	
 	
 	func beginVisualisation() {
 		frameTimer = Timer.scheduledTimer(timeInterval: 1.0 / frameRate, target: self, selector: #selector(update), userInfo: nil, repeats: true)
@@ -61,17 +61,17 @@ class ViewController: NSViewController {
 	
 	func updateInstance() {
 		
-		for robot1 in instance.swarm {
-			if robot1.isActive {
-				for robot2 in instance.swarm {
-					if !robot2.isActive {
-						if robot1.coordinate == robot2.coordinate {
-							robot2.activate()
-						}
-					}
-				}
-			}
-		}
+//		for robot1 in instance.swarm {
+//			if robot1.isActive {
+//				for robot2 in instance.swarm {
+//					if !robot2.isActive {
+//						if robot1.coordinate == robot2.coordinate {
+//							robot2.activate()
+//						}
+//					}
+//				}
+//			}
+//		}
 		
 	}
 
@@ -79,17 +79,17 @@ class ViewController: NSViewController {
 	func frameFromInstance() -> SVFrame {
 		
 		var roboPoints = [CGPoint]()
-		var polygons = [SVPolygon]()
+//		var polygons = [SVPolygon]()
 		
 		for robot in instance.swarm {
-			roboPoints.append(robot.coordinate)
+			roboPoints.append(robot.current)
 		}
 		
-		for obstacle in instance.map {
-			polygons.append(obstacle.coordinates)
-		}
+//		for obstacle in instance.map {
+//			polygons.append(obstacle)
+//		}
 		
-		return (roboPoints,polygons)
+		return (roboPoints,instance.map)
 	}
 	
 
