@@ -8,6 +8,10 @@
 
 import Cocoa
 
+func ==(lhs: SVRobot, rhs: SVRobot) -> Bool {
+	return lhs.start == rhs.start
+}
+
 class SVRobot: NSObject {
 	
 	private var activated = false
@@ -18,25 +22,33 @@ class SVRobot: NSObject {
 		}
 	}
 	
-	var x : Double!
-	var y : Double!
+	var start : CGPoint!
+	var current : CGPoint!
 	
-	var coordinate : CGPoint {
+	var target : SVRobot?
+	var path : SVPath!
+	
+	var available : Bool {
 		get {
-			return CGPoint(x: x, y: y)
+			return isActive && (target == nil)
 		}
 	}
 
 	init(x: Double, y: Double) {
 		super.init()
 		
-		self.x = x
-		self.y = y
+		let point = CGPoint(x: x, y: y)
+		
+		self.start = point
+		self.current = point
+		
+		self.path = [start]
 		
 	}
 	
 	func activate() {
 		self.activated = true
 	}
+	
 
 }

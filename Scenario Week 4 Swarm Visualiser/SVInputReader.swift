@@ -97,7 +97,9 @@ class SVInputReader: SVIOReader {
 			coords.append(convertStringToCoordinates(rep: point))
 		}
         
-		return SVObstacle(coordinates: coords)
+		return coords.map({ (point: (x:Double, y:Double)) -> CGPoint in
+			return CGPoint(x: point.x, y: point.y)
+		})
 	}
 	
 

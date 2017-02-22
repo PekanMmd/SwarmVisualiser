@@ -10,6 +10,7 @@ import Cocoa
 
 class SVDisplayView: NSView {
 	
+	
 	let kWindowTitleHeight : CGFloat = 20
 	
 	var framePaddingX : CGFloat {
@@ -149,6 +150,8 @@ class SVDisplayView: NSView {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 		
+		self.layer?.backgroundColor = SVDesign.colourWhite().cgColor
+		
 		let context = NSGraphicsContext.current()!.cgContext
 		context.clear(self.frame)
 		
@@ -169,7 +172,7 @@ class SVDisplayView: NSView {
 	func drawRobot(robot: SVRobotFrame, colour: SVColour) {
 		
 		let context = NSGraphicsContext.current()!.cgContext
-		context.setLineWidth(SVDesign.sizePointWidth())
+		context.setLineWidth(SVDesign.sizeBorderWidth())
 		context.setStrokeColor(colour.cgColor)
 		context.setFillColor(colour.cgColor)
 		

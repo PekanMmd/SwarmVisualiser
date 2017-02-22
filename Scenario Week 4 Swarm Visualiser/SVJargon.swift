@@ -8,11 +8,13 @@
 
 import Foundation
 
+
 // Input
 typealias SVSwarm = [SVRobot]
 typealias SVMap = [SVObstacle]
 typealias SVInstance = (swarm: SVSwarm, map: SVMap)
 typealias SVPolygon = [CGPoint]
+typealias SVObstacle = SVPolygon
 
 // Output
 //typealias SVOutputBranch = SVOutputTree
@@ -24,3 +26,9 @@ typealias SVRobotFrame = CGPoint
 typealias SVObstacleFrame = SVPolygon
 typealias SVFrame = (robots: [SVRobotFrame], obstacles: [SVObstacleFrame])
 typealias SVScaleFactor = CGFloat
+
+// Solving
+typealias SVCluster = SVPolygon
+typealias SVPath = [CGPoint]
+typealias SVPathTable = [ (CGPoint, CGPoint, SVPath) ]
+typealias SVEdge = (CGPoint, CGPoint)

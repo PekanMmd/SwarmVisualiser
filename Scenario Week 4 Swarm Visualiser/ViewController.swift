@@ -20,7 +20,7 @@ class ViewController: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		let inputFile = Bundle.main.path(forResource: "robots1", ofType: "txt") ?? ""
+		let inputFile = Bundle.main.path(forResource: "demo1", ofType: "txt") ?? ""
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
 		display = SVDisplayView(frame: self.view.frame , svFrame: frameFromInstance())
@@ -61,17 +61,17 @@ class ViewController: NSViewController {
 	
 	func updateInstance() {
 		
-		for robot1 in instance.swarm {
-			if robot1.isActive {
-				for robot2 in instance.swarm {
-					if !robot2.isActive {
-						if robot1.coordinate == robot2.coordinate {
-							robot2.activate()
-						}
-					}
-				}
-			}
-		}
+//		for robot1 in instance.swarm {
+//			if robot1.isActive {
+//				for robot2 in instance.swarm {
+//					if !robot2.isActive {
+//						if robot1.coordinate == robot2.coordinate {
+//							robot2.activate()
+//						}
+//					}
+//				}
+//			}
+//		}
 		
 	}
 
@@ -79,17 +79,17 @@ class ViewController: NSViewController {
 	func frameFromInstance() -> SVFrame {
 		
 		var roboPoints = [CGPoint]()
-		var polygons = [SVPolygon]()
+//		var polygons = [SVPolygon]()
 		
 		for robot in instance.swarm {
-			roboPoints.append(robot.coordinate)
+			roboPoints.append(robot.current)
 		}
 		
-		for obstacle in instance.map {
-			polygons.append(obstacle.coordinates)
-		}
+//		for obstacle in instance.map {
+//			polygons.append(obstacle)
+//		}
 		
-		return (roboPoints,polygons)
+		return (roboPoints,instance.map)
 	}
 	
 
