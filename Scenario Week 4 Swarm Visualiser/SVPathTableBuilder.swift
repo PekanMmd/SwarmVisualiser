@@ -89,20 +89,23 @@ class SVPathTableBuilder: NSObject {
 	}
 	
 	
-	func checkPointsForLine(edge: SVEdge) -> (SVPoint, SVPoint) {
+	func checkPointsForLine(edge: SVEdge, number: Double) -> [SVPoint] {
 		
-		let checkThreshold : Double = 0.01
+		let checkThreshold : Double = 1.0 / number
 		
 		let dx : Double = edge.1.x - edge.0.x
 		let dy : Double = edge.1.y - edge.0.y
+		var points = [SVPoint]()
 		
-		let minX = dx * checkThreshold + edge.0.x
-		let minY = dy * checkThreshold + edge.0.y
+		for i in 1 ..< Int(number) - 1 {
+			
+			let midX = dx * checkThreshold * Double(i) + edge.0.x
+			let midY = dy * checkThreshold * Double(i) + edge.0.y
+			
+			points.append(SVPoint(x: midX, y: midY))
+		}
 		
-		let maxX = edge.1.x - dx * checkThreshold
-		let maxY = edge.1.y - dy * checkThreshold
-		
-		return (SVPoint(x: minX, y: minY), SVPoint(x: maxX, y: maxY))
+		return points
 	}
 
 	func minMaxXForPolygon(polygon: SVPolygon) -> (Double, Double) {
@@ -121,6 +124,45 @@ class SVPathTableBuilder: NSObject {
 		return (minx - 0.000001, maxx + 0.000001)
 	}
 	
+	func point(point p: SVPoint, isInPolygon polygon: (SVPolygon,[SVEdge])) -> Bool {
+		
+		let yVal = p.y
+		
+		let minMax = minMaxXForPolygon(polygon: polygon.0)
+		let horizon : SVEdge = (SVPoint(x: minMax.0, y: yVal),SVPoint(x: minMax.1, y: yVal))
+		
+		var intersects = [Double?]()
+		
+		for edge in polygon.1 {
+			intersects.append(xCoordWhereLine(line: horizon, IntersectsEdge: edge))
+		}
+		
+		intersects = intersects.filter { (p) -> Bool in
+			return p != nil
+		}
+		
+		intersects = intersects.sorted { (p1, p2) -> Bool in
+			return p1! < p2!
+		}
+		
+		if intersects.count == 0 {
+			return false
+		}
+		
+		var leftNodesCount = 0
+		
+		for point in intersects {
+			if point! == p.x {
+				return false
+			}
+			if point! < p.x {
+				leftNodesCount += 1
+			}
+		}
+		
+		return (leftNodesCount % 2) != 0
+	}
+	
 	func doesLine(line: SVEdge, PassThroughPolygon polygon: SVPolygon) -> Bool {
 		
 		var edges = [SVEdge]()
@@ -137,61 +179,17 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
-		let checkpoints = checkPointsForLine(edge: line)
+		let checkpoints = checkPointsForLine(edge: line, number: 100)
 		
-		let checkpoint = checkpoints.0
-		let checkpoint2 = checkpoints.1
-		
-		let yVal = checkpoint.y
-		
-		let minMax = minMaxXForPolygon(polygon: polygon)
-		let horizon : SVEdge = (SVPoint(x: minMax.0, y: yVal),SVPoint(x: minMax.1, y: yVal))
-		let horizon2 : SVEdge = (SVPoint(x: minMax.0, y: checkpoint2.y),SVPoint(x: minMax.1, y: checkpoint2.y))
-		
-		var intersects = [Double?]()
-		var intersects2 = [Double?]()
-		
-		for edge in edges {
-			intersects.append(xCoordWhereLine(line: horizon, IntersectsEdge: edge))
-			intersects2.append(xCoordWhereLine(line: horizon2, IntersectsEdge: edge))
-		}
-		
-		intersects = intersects.filter { (p) -> Bool in
-			return p != nil
-		}
-		
-		intersects = intersects.sorted { (p1, p2) -> Bool in
-			return p1! < p2!
-		}
-		
-		intersects2 = intersects2.filter { (p) -> Bool in
-			return p != nil
-		}
-		
-		intersects2 = intersects2.sorted { (p1, p2) -> Bool in
-			return p1! < p2!
-		}
-		
-		if (intersects.count == 0) && (intersects2.count == 0) {
-			return false
-		}
-		
-		var leftNodesCount = 0
-		var leftNodesCount2 = 0
-		
-		for p in intersects {
-			if p! < checkpoint.x {
-				leftNodesCount += 1
+		for checkpoint in checkpoints {
+			
+			if point(point: checkpoint, isInPolygon: (polygon,edges)) {
+				return true
 			}
+			
 		}
 		
-		for p in intersects2 {
-			if p! < checkpoint2.x {
-				leftNodesCount2 += 1
-			}
-		}
-		
-		return (leftNodesCount % 2 != 0) || (leftNodesCount2 % 2 != 0)
+		return false
 		
 	}
 	
@@ -319,22 +317,28 @@ class SVPathTableBuilder: NSObject {
 	
 	func point(p1: SVPoint, isVisibleFromPoint p2: SVPoint) -> Bool {
 		
-		if  pointIsACorner(p: p1) && pointIsACorner(p: p2) {
-			for polygon in instance.map {
-				
-				if polygon.contains(p1) && polygon.contains(p2) {
-					if doesLine(line: (p1,p2), PassThroughPolygon: polygon) {
-						return false
-					}
-				}
-			}
-		}
-		
-		for edge in allEdges {
-			if doesLine(line: (p1,p2), intersectEdge: edge) {
+		for polygon in instance.map {
+			if doesLine(line: (p1,p2), PassThroughPolygon: polygon) {
 				return false
 			}
 		}
+		
+//		if  pointIsACorner(p: p1) && pointIsACorner(p: p2) {
+//			for polygon in instance.map {
+//				
+//				if polygon.contains(p1) && polygon.contains(p2) {
+//					if doesLine(line: (p1,p2), PassThroughPolygon: polygon) {
+//						return false
+//					}
+//				}
+//			}
+//		}
+//		
+//		for edge in allEdges {
+//			if doesLine(line: (p1,p2), intersectEdge: edge) {
+//				return false
+//			}
+//		}
 		
 		return true
 		
