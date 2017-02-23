@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D568DDF1E5B9F5400E13844 /* robots1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D568DDE1E5B9F5400E13844 /* robots1.txt */; };
+		8D568DDF1E5B9F5400E13844 /* input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D568DDE1E5B9F5400E13844 /* input.txt */; };
 		B22A46941E5B221E00BE3741 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46931E5B221E00BE3741 /* AppDelegate.swift */; };
 		B22A46961E5B221E00BE3741 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46951E5B221E00BE3741 /* ViewController.swift */; };
 		B22A46981E5B221E00BE3741 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22A46971E5B221E00BE3741 /* Assets.xcassets */; };
@@ -21,12 +21,11 @@
 		B2FAF6A31E5C83EA00446E8A /* SVOutputReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FAF6A21E5C83EA00446E8A /* SVOutputReader.swift */; };
 		B2FAF6A51E5C86EF00446E8A /* SVIOReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FAF6A41E5C86EF00446E8A /* SVIOReader.swift */; };
 		B2FAF6A71E5CC31200446E8A /* SVProblemSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FAF6A61E5CC31200446E8A /* SVProblemSolver.swift */; };
-		B2FAF6A91E5D19A000446E8A /* demo1.txt in Resources */ = {isa = PBXBuildFile; fileRef = B2FAF6A81E5D19A000446E8A /* demo1.txt */; };
 		B2FAF6AB1E5DE82500446E8A /* SVPathTableBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FAF6AA1E5DE82500446E8A /* SVPathTableBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8D568DDE1E5B9F5400E13844 /* robots1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = robots1.txt; sourceTree = "<group>"; };
+		8D568DDE1E5B9F5400E13844 /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
 		B22A46901E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scenario Week 4 Swarm Visualiser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B22A46931E5B221E00BE3741 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B22A46951E5B221E00BE3741 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -42,7 +41,6 @@
 		B2FAF6A21E5C83EA00446E8A /* SVOutputReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVOutputReader.swift; sourceTree = "<group>"; };
 		B2FAF6A41E5C86EF00446E8A /* SVIOReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVIOReader.swift; sourceTree = "<group>"; };
 		B2FAF6A61E5CC31200446E8A /* SVProblemSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVProblemSolver.swift; sourceTree = "<group>"; };
-		B2FAF6A81E5D19A000446E8A /* demo1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = demo1.txt; sourceTree = "<group>"; };
 		B2FAF6AA1E5DE82500446E8A /* SVPathTableBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SVPathTableBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,8 +74,7 @@
 		B22A46921E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser */ = {
 			isa = PBXGroup;
 			children = (
-				8D568DDE1E5B9F5400E13844 /* robots1.txt */,
-				B2FAF6A81E5D19A000446E8A /* demo1.txt */,
+				8D568DDE1E5B9F5400E13844 /* input.txt */,
 				B22A46931E5B221E00BE3741 /* AppDelegate.swift */,
 				B22A46A21E5B22F900BE3741 /* SVRobot.swift */,
 				B2FAF6AA1E5DE82500446E8A /* SVPathTableBuilder.swift */,
@@ -158,8 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B22A46981E5B221E00BE3741 /* Assets.xcassets in Resources */,
-				B2FAF6A91E5D19A000446E8A /* demo1.txt in Resources */,
-				8D568DDF1E5B9F5400E13844 /* robots1.txt in Resources */,
+				8D568DDF1E5B9F5400E13844 /* input.txt in Resources */,
 				B22A469B1E5B221E00BE3741 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

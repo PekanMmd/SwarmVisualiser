@@ -59,8 +59,10 @@ class SVInputReader: SVIOReader {
             }
             
         }
-        
-        arrayOfObjects += separateStringBySemiColons(rep: obstaclesString)
+		
+		if obstaclesString != "" {
+			arrayOfObjects += separateStringBySemiColons(rep: obstaclesString)
+		}
 		
 		return arrayOfObjects
 	}

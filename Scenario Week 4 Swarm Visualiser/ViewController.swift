@@ -20,7 +20,7 @@ class ViewController: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		let inputFile = Bundle.main.path(forResource: "robots1", ofType: "txt") ?? ""
+		let inputFile = Bundle.main.path(forResource: "input", ofType: "txt") ?? ""
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
 		let problemSolver = SVProblemSolver(instance: instance)

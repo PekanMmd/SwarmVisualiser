@@ -129,9 +129,7 @@ class SVProblemSolver: NSObject {
 			}
 		}
 		
-		
 	}
-	
 	
 	/* k-cluster algorithm
 	
@@ -200,8 +198,6 @@ class SVProblemSolver: NSObject {
 	func robot(robot: SVRobot, closestUntargetedRobotInCluster cluster: SVCluster) {
 		//TODO: implement
 	}
-	
-	
 	
 	
 	func solveByKCluster(k: Int) {
