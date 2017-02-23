@@ -21,11 +21,6 @@ class SVProblemSolver: NSObject {
 		self.builder = SVPathTableBuilder(instance: instance)
 	}
 	
-//	func createPathTable() {
-//		let builder = SVPathTableBuilder()
-//		self.pathTable = builder.createTable(instance: self.instance)
-//	}
-	
 	func getShortestPathBetweenTwoCoordinatesFromTable(co1: SVPoint, co2: SVPoint) -> SVPath {
 		
 		for p in pathTable {
@@ -34,7 +29,7 @@ class SVProblemSolver: NSObject {
 			}
 		}
 		
-		let path = builder.pathBetweenPoints(p1: co1, p2: co2)
+		let path = builder.pathBetweenPoints(p1: co1, p2: co2, optimised: false)
 		
 		pathTable.append((co1,co2,path))
 		
@@ -70,6 +65,13 @@ class SVProblemSolver: NSObject {
 		}
 		
 		return length
+	}
+	
+	func distanceBetweenRobots(r1: SVRobot, r2: SVRobot) -> Double {
+		
+		let path = getShortestPathBetweenTwoRobots(r1: r1, r2: r2)
+		return lengthOfPath(path: path)
+		
 	}
 	
 	func closestRobotTo(robot: SVRobot) -> SVRobot {
@@ -279,13 +281,20 @@ class SVProblemSolver: NSObject {
 		}).count == 0
 	}
 	
-	func robot(robot: SVRobot, closestUntargetedRobotInCluster cluster: SVCluster) {
-		let untargeted = robotsInCluster(cluster: cluster).filter { (rob: SVRobot) -> Bool in
+	func robot(robot: SVRobot, closestUntargetedRobotInCluster cluster: SVCluster) -> SVRobot? {
+		var untargeted = robotsInCluster(cluster: cluster).filter { (rob: SVRobot) -> Bool in
 			return !rob.targeted && !rob.isActive
 		}
 		
+		if untargeted.count == 0 {
+			return nil
+		}
 		
+		untargeted.sort { (r1, r2) -> Bool in
+			return distanceBetweenRobots(r1: robot, r2: r1) < distanceBetweenRobots(r1: robot, r2: r2)
+		}
 		
+		return untargeted[0]
 	}
 	
 	

@@ -279,6 +279,52 @@ class SVPathTableBuilder: NSObject {
 		
 	}
 	
+	func lineBetweenPointsClosestPointFromIntersectedPolygonsDirty(p1: SVPoint, p2: SVPoint) -> SVPoint? {
+		
+		let line = (p1,p2)
+		var edges = edgesIntersectedByLine(line: line)
+		
+		for polygon in instance.map {
+			var edgeList = [SVEdge]()
+			
+			for p in 0 ..< polygon.count - 1 {
+				edgeList.append((polygon[p],polygon[p+1]))
+			}
+			
+			edgeList.append((polygon.last!,polygon.first!))
+			
+			var polyAdded = false
+			
+			for edge in edgeList {
+				
+				if !polyAdded {
+					
+					for e in edges {
+						if e == edge {
+							edges += edgeList
+							polyAdded = true
+						}
+					}
+				}
+			}
+			
+		}
+		
+		let points = pointsFromEdges(edges: edges)
+		
+		if points.count == 0 {
+			return nil
+		}
+		
+		for p in points {
+			if point(p1: p, isVisibleFromPoint: p1) {
+				return p
+			}
+		}
+		
+		return nil
+	}
+	
 	func lineBetweenPointsClosestPointFromIntersectedPolygons(p1: SVPoint, p2: SVPoint) -> SVPoint? {
 		
 		let line = (p1,p2)
@@ -332,13 +378,19 @@ class SVPathTableBuilder: NSObject {
 		return points[0]
 	}
 	
-	func pathBetweenPoints(p1: SVPoint, p2: SVPoint) -> SVPath {
-		let closestIntersect = lineBetweenPointsClosestPointFromIntersectedPolygons(p1: p1, p2: p2)
+	func pathBetweenPoints(p1: SVPoint, p2: SVPoint, optimised: Bool) -> SVPath {
+		var closestIntersect : SVPoint!
+		
+		if optimised {
+			closestIntersect = lineBetweenPointsClosestPointFromIntersectedPolygons(p1: p1, p2: p2)
+		} else {
+			closestIntersect = lineBetweenPointsClosestPointFromIntersectedPolygonsDirty(p1: p1, p2: p2)
+		}
 		
 		if closestIntersect == nil {
 			return [p2]
 		} else {
-			return [closestIntersect!] + pathBetweenPoints(p1: closestIntersect!, p2: p2)
+			return [closestIntersect!] + pathBetweenPoints(p1: closestIntersect!, p2: p2, optimised: optimised)
 		}
 		
 	}
@@ -363,7 +415,7 @@ class SVPathTableBuilder: NSObject {
 			for target in instance.swarm {
 				
 				if robot.start != target.start {
-					table.append((robot.start,target.start,pathBetweenPoints(p1: robot.start, p2: target.start)))
+					table.append((robot.start,target.start,pathBetweenPoints(p1: robot.start, p2: target.start, optimised: false)))
 				}
 				
 			}
