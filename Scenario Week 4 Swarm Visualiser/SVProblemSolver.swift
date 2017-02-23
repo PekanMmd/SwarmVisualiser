@@ -11,18 +11,20 @@ import Cocoa
 class SVProblemSolver: NSObject {
 
 	var instance : SVInstance!
+	var builder : SVPathTableBuilder!
 	
 	var pathTable = SVPathTable()
 	
 	init(instance: SVInstance) {
 		super.init()
 		self.instance = instance
+		self.builder = SVPathTableBuilder(instance: instance)
 	}
 	
-	func createPathTable() {
-		let builder = SVPathTableBuilder()
-		self.pathTable = builder.createTable(instance: self.instance)
-	}
+//	func createPathTable() {
+//		let builder = SVPathTableBuilder()
+//		self.pathTable = builder.createTable(instance: self.instance)
+//	}
 	
 	func getShortestPathBetweenTwoCoordinatesFromTable(co1: CGPoint, co2: CGPoint) -> SVPath {
 		
@@ -32,7 +34,11 @@ class SVProblemSolver: NSObject {
 			}
 		}
 		
-		return []
+		let path = builder.pathBetweenPoints(p1: co1, p2: co2)
+		
+		pathTable.append((co1,co2,path))
+		
+		return path
 	}
 	
 	func getShortestPathBetweenTwoRobots(r1: SVRobot, r2: SVRobot) -> SVPath {
@@ -113,7 +119,7 @@ class SVProblemSolver: NSObject {
 	
 	func marathonAlgorithm() {
 		
-		createPathTable()
+//		createPathTable()
 		
 		let runner = instance.swarm[0]
 		runner.activate()
