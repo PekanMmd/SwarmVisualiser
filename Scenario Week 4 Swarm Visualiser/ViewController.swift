@@ -8,6 +8,9 @@
 
 import Cocoa
 
+let kNumberOfClusters      : Int    = 8
+let kIntersectionGradation : Double = 10
+
 class ViewController: NSViewController {
 	
 	var frameRate : SVFramesPerSecond = 5
@@ -25,13 +28,13 @@ class ViewController: NSViewController {
 		
 		
 //		// Problem Solver Code
-//		let problemSolver = SVProblemSolver(instance: instance)
-//		
-////		problemSolver.runFatBoyRunAlgorithm()
-////		problemSolver.marathonAlgorithm()
-//		problemSolver.solveByStarCluster(numberOfClusters: 15)
-//		
-//		print(problemSolver.outputStringForInstance())
+		let problemSolver = SVProblemSolver(instance: instance)
+		
+//		problemSolver.runFatBoyRunAlgorithm()
+//		problemSolver.marathonAlgorithm()
+		problemSolver.solveByStarCluster(numberOfClusters: kNumberOfClusters)
+		
+		print(problemSolver.outputStringForInstance())
 		
 		
 		

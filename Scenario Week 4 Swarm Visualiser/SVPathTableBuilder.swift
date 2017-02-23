@@ -179,7 +179,7 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
-		let checkpoints = checkPointsForLine(edge: line, number: 100)
+		let checkpoints = checkPointsForLine(edge: line, number: kIntersectionGradation)
 		
 		for checkpoint in checkpoints {
 			
