@@ -23,12 +23,17 @@ class ViewController: NSViewController {
 		let inputFile = Bundle.main.path(forResource: "input", ofType: "txt") ?? ""
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
+		
+		// Problem Solver Code
 		let problemSolver = SVProblemSolver(instance: instance)
-		
-		problemSolver.solveByKCluster(k: 2)
-		
+//		problemSolver.runFatBoyRunAlgorithm()
+//		problemSolver.marathonAlgorithm()
+		problemSolver.solveByStarCluster(numberOfClusters: 7)
 		print(problemSolver.outputStringForInstance())
 		
+		
+		
+		// Visualiser
 		display = SVDisplayView(frame: self.view.frame , svFrame: frameFromInstance())
 		
 		self.display.translatesAutoresizingMaskIntoConstraints = false

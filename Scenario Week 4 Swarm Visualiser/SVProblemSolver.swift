@@ -357,7 +357,7 @@ class SVProblemSolver: NSObject {
 	}
 	
 	
-	func solveByKCluster(k: Int) {
+	func solveByStarCluster(numberOfClusters k: Int) {
 		
 		divideIntoKClusters(k: k)
 		
@@ -366,7 +366,7 @@ class SVProblemSolver: NSObject {
 		
 		let target1 = closestUntargetedRobot(robot: starter)!
 		starter.current = target1.current
-		starter.path = starter.path + [target1.current]
+		starter.path = starter.path + getShortestPathBetweenTwoRobots(r1: starter, r2: target1)
 		target1.activate()
 		
 		while !instanceIsComplete() {
