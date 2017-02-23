@@ -74,6 +74,12 @@ class SVPathTableBuilder: NSObject {
 		return (minx,maxx)
 	}
 	
+	func minMaxYForEdge(edge: SVEdge) -> (Double, Double) {
+		let miny = min(edge.0.y, edge.1.y)
+		let maxy = max(edge.0.y, edge.1.y)
+		return (miny,maxy)
+	}
+	
 	func lineIsHorizontal(line: SVEdge) -> Bool {
 		return line.0.y == line.1.y
 	}
@@ -242,7 +248,11 @@ class SVPathTableBuilder: NSObject {
 				return nil
 			}
 			
-			return Xa
+			b2 = edge.0.y - (A2 * edge.0.x)
+			let y = A2 * Xa + b2
+			let Iy = minMaxYForEdge(edge: line)
+			
+			return (Iy.0 <= y) && (y <= Iy.1) ? Xa : nil
 			
 		} else if A2 == nil {
 			Xa = edge.0.x
@@ -251,7 +261,11 @@ class SVPathTableBuilder: NSObject {
 				return nil
 			}
 			
-			return Xa
+			b1 = line.0.y - (A1 * line.0.x)
+			let y = A1 * Xa + b1
+			let Iy = minMaxYForEdge(edge: edge)
+			
+			return (Iy.0 <= y) && (y <= Iy.1) ? Xa : nil
 			
 		} else {
 			
@@ -259,10 +273,6 @@ class SVPathTableBuilder: NSObject {
 			b2 = edge.0.y - (A2 * edge.0.x)
 			
 			Xa = (b2 - b1) / (A1 - A2)
-			
-			if compareDoubles(d1: Xa, d2: line.0.x) || compareDoubles(d1: Xa, d2: line.1.x) || compareDoubles(d1: Xa, d2: edge.0.x) || compareDoubles(d1: Xa, d2: edge.1.x) {
-				return nil
-			}
 			
 		}
 		
@@ -272,7 +282,9 @@ class SVPathTableBuilder: NSObject {
 	
 	func doesLine(line: SVEdge, intersectEdge edge: SVEdge) -> Bool {
 		
-		return xCoordWhereLine(line: line, IntersectsEdge: edge) != nil
+		let xcoord = xCoordWhereLine(line: line, IntersectsEdge: edge)
+		
+		return xcoord != nil
 		
 	}
 	
@@ -378,6 +390,7 @@ class SVPathTableBuilder: NSObject {
 		
 		let line = (p1,p2)
 		var edges = edgesIntersectedByLine(line: line)
+		var polyedges = [SVEdge]()
 		
 		for polygon in instance.map {
 			var edgeList = [SVEdge]()
@@ -390,20 +403,24 @@ class SVPathTableBuilder: NSObject {
 			
 			var polyAdded = false
 			
-			for edge in edgeList {
-				
-				if !polyAdded {
+			if !polyAdded {
+				for edge in edgeList {
 					
-					for e in edges {
-						if e == edge {
-							edges += edgeList
-							polyAdded = true
+					if !polyAdded {
+						
+						for e in edges {
+							if !polyAdded {
+								if e == edge {
+									polyedges += edgeList
+									polyAdded = true
+								}
+							}
 						}
 					}
 				}
 			}
-			
 		}
+		edges = polyedges
 		
 		var points = pointsFromEdges(edges: edges)
 		
@@ -444,12 +461,12 @@ class SVPathTableBuilder: NSObject {
 		
 		if closestIntersect != nil {
 			
-			let pathToAdd = pathBetweenPoints(p1: closestIntersect!, p2: p2, optimised: optimised, visited: visited + [closestIntersect!])
+			let pathToAdd = [closestIntersect!] + pathBetweenPoints(p1: closestIntersect!, p2: p2, optimised: optimised, visited: visited + [closestIntersect!])
 			
 			var furthestVisible = 0
 			
 			for p in 0 ..< pathToAdd.count {
-				if point(p1: pathToAdd[p], isVisibleFromPoint: closestIntersect!) {
+				if point(p1: pathToAdd[p], isVisibleFromPoint: p1) {
 					furthestVisible = p
 				}
 			}
@@ -459,7 +476,7 @@ class SVPathTableBuilder: NSObject {
 				optimisedPath.append(pathToAdd[i])
 			}
 			
-			path = [closestIntersect!] + optimisedPath
+			path = optimisedPath
 		}
 		
 		pathTable.append((p1,p2,path))

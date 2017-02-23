@@ -426,8 +426,9 @@ class SVProblemSolver: NSObject {
 				
 				if roboti.target != nil {
 					let target = roboti.target!
+					let newPath = getShortestPathBetweenTwoRobots(r1: roboti, r2: target)
+					roboti.path = roboti.path + newPath
 					roboti.current = target.current
-					roboti.path = roboti.path + [target.current]
 					target.activate()
 					target.targeted = false
 					roboti.target = nil
@@ -468,40 +469,6 @@ class SVProblemSolver: NSObject {
 		
 	}
 	
-	func optimisedOutputForInstance() -> SVOutput {
-		
-		let suboptimal = outputForInstance()
-		let roboPoints = instance.swarm.map({ (r) -> SVPoint in
-			return r.start
-		})
-		var optimal = SVOutput()
-		
-		for path in suboptimal {
-			
-			for point in 0 ..< path.count {
-				
-				let currentRobot = path[point]
-				if !roboPoints.contains(currentRobot) {
-					continue
-				}
-				
-				for next in point ..< path.count {
-					if roboPoints.contains(path[next]) {
-						
-						let cornersRange = path[(point + 1) ..< next]
-						
-						
-						
-					}
-					break
-				}
-				
-			}
-			
-		}
-		
-		return optimal
-	}
 	
 	func outputStringForInstance() -> String {
 		var output = ""

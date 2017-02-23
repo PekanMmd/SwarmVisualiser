@@ -24,11 +24,13 @@ class ViewController: NSViewController {
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
 		
-		// Problem Solver Code
+//		// Problem Solver Code
 		let problemSolver = SVProblemSolver(instance: instance)
+		
 //		problemSolver.runFatBoyRunAlgorithm()
 //		problemSolver.marathonAlgorithm()
-		problemSolver.solveByStarCluster(numberOfClusters: 7)
+		problemSolver.solveByStarCluster(numberOfClusters: 2)
+		
 		print(problemSolver.outputStringForInstance())
 		
 		
