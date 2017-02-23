@@ -15,6 +15,7 @@ func ==(lhs: SVRobot, rhs: SVRobot) -> Bool {
 class SVRobot: NSObject {
 	
 	private var activated = false
+	var targeted = false
 	
 	var isActive : Bool {
 		get {

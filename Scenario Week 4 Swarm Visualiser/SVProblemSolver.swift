@@ -181,7 +181,6 @@ class SVProblemSolver: NSObject {
 	var clusters = [SVCluster]()
 	
 	func divideIntoKClusters(k: Int) {
-		//TODO: implement
 		let first = instance.swarm[0]
 		
 		var minx = first.start.x
@@ -204,48 +203,89 @@ class SVProblemSolver: NSObject {
 			}
 		}
 		
+		let gapx = (maxx - minx) / Double(k)
+		let gapy = (maxy - miny) / Double(k)
 		
+		for i in 0 ..< k {
+			for j in 0 ..< k {
+				
+				let startx = Double(i) * gapx
+				let starty = Double(j) * gapy
+				
+				var endx = startx + gapx
+				var endy = starty + gapy
+				
+				if i == k {
+					endx = maxx
+				}
+				
+				if j == k {
+					endy = maxy
+				}
+				
+				var cluster = SVCluster()
+				
+				for x in [startx, endx] {
+					for y in [starty, endy] {
+						cluster.append(SVPoint(x: x, y: y))
+					}
+				}
+				
+				clusters.append(cluster)
+			}
+		}
+	}
+	
+	func minXForCluster(cluster: SVCluster) -> Double {
+		return cluster[0].x
+	}
+	
+	func minYForCluster(cluster: SVCluster) -> Double {
+		return cluster[0].y
+	}
+	
+	func maxXForCluster(cluster: SVCluster) -> Double {
+		return cluster[3].x
+	}
+	
+	func maxYForCluster(cluster: SVCluster) -> Double {
+		return cluster[3].y
+	}
+	
+	func robot(robot: SVRobot, isInCluster cluster: SVCluster) -> Bool {
+		return (robot.current.x > minXForCluster(cluster: cluster)) && (robot.current.x < maxXForCluster(cluster: cluster)) && (robot.current.y > minYForCluster(cluster: cluster)) && (robot.current.y < maxYForCluster(cluster: cluster))
+	}
+	
+	func robotsInCluster(cluster: SVCluster) -> [SVRobot] {
+		return instance.swarm.filter({ (rob: SVRobot) -> Bool in
+			return robot(robot: rob, isInCluster: cluster)
+		})
+	}
+	
+	func clusterHasBeenTargeted(cluster: SVCluster) -> Bool {
 		
+		for rob in robotsInCluster(cluster: cluster) {
+			if rob.targeted {
+				return true
+			}
+		}
+		
+		return false
 	}
 	
-	func minXForCluster(cluster: SVCluster) {
-		//TODO: implement
-	}
-	
-	func minYForCluster(cluster: SVCluster) {
-		//TODO: implement
-	}
-	
-	func maxXForCluster(cluster: SVCluster) {
-		//TODO: implement
-	}
-	
-	func maxYForCluster(cluster: SVCluster) {
-		//TODO: implement
-	}
-	
-	func robot(robot r: SVRobot, isInCluster cluster: SVCluster) {
-		//TODO: implement
-	}
-	
-	func robotsInCluster(cluster: SVCluster) {
-		//TODO: implement
-	}
-	
-	func clusterHasBeenTargeted(cluster: SVCluster) {
-		//TODO: implement
-	}
-	
-	func robotHasBeenTargeted(robot: SVRobot) {
-		//TODO: implement
-	}
-	
-	func clusterHasBeenCompleted(cluster: SVCluster) {
-		//TODO: implement
+	func clusterHasBeenCompleted(cluster: SVCluster) -> Bool {
+		return robotsInCluster(cluster: cluster).filter({ (rob: SVRobot) -> Bool in
+			return !rob.isActive
+		}).count == 0
 	}
 	
 	func robot(robot: SVRobot, closestUntargetedRobotInCluster cluster: SVCluster) {
-		//TODO: implement
+		let untargeted = robotsInCluster(cluster: cluster).filter { (rob: SVRobot) -> Bool in
+			return !rob.targeted && !rob.isActive
+		}
+		
+		
+		
 	}
 	
 	

@@ -146,11 +146,6 @@ class SVPathTableBuilder: NSObject {
 			return nil
 		}
 		
-		let I1 = minMaxXForEdge(edge: line)
-		let I2 = minMaxXForEdge(edge: edge)
-		
-		let Ia = ( max(I1.0, I2.0), min(I1.1, I2.1) )
-		
 		if max(line.0.x, line.1.x) < min(edge.0.x, edge.1.x) {
 			return nil
 		}
@@ -166,6 +161,11 @@ class SVPathTableBuilder: NSObject {
 		if max(edge.0.y, edge.1.y) < min(line.0.y, line.1.y) {
 			return nil
 		}
+		
+		let I1 = minMaxXForEdge(edge: line)
+		let I2 = minMaxXForEdge(edge: edge)
+		
+		let Ia = ( max(I1.0, I2.0), min(I1.1, I2.1) )
 		
 		var A1 : Double!
 		var A2 : Double!
@@ -269,7 +269,14 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
-		return edgesIntersectedByLine(line: (p1,p2)).count == 0
+		for edge in allEdges {
+			if doesLine(line: (p1,p2), intersectEdge: edge) {
+				return false
+			}
+		}
+		
+		return true
+		
 	}
 	
 	func lineBetweenPointsClosestPointFromIntersectedPolygons(p1: SVPoint, p2: SVPoint) -> SVPoint? {
