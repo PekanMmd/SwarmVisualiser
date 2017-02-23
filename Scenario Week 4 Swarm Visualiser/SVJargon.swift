@@ -33,6 +33,7 @@ typealias SVPath = [SVPoint]
 typealias SVPathTable = [ (SVPoint, SVPoint, SVPath) ]
 typealias SVEdge = (SVPoint, SVPoint)
 typealias SVEdgeTable = [ (SVEdge, SVEdge, Bool) ]
+typealias SVOutput = [SVPath]
 
 public struct SVPoint {
 	

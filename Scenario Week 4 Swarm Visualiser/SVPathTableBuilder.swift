@@ -443,7 +443,23 @@ class SVPathTableBuilder: NSObject {
 		var path = [p2]
 		
 		if closestIntersect != nil {
-			path = [closestIntersect!] + pathBetweenPoints(p1: closestIntersect!, p2: p2, optimised: optimised, visited: visited + [closestIntersect!])
+			
+			let pathToAdd = pathBetweenPoints(p1: closestIntersect!, p2: p2, optimised: optimised, visited: visited + [closestIntersect!])
+			
+			var furthestVisible = 0
+			
+			for p in 0 ..< pathToAdd.count {
+				if point(p1: pathToAdd[p], isVisibleFromPoint: closestIntersect!) {
+					furthestVisible = p
+				}
+			}
+			
+			var optimisedPath = SVPath()
+			for i in furthestVisible ..< pathToAdd.count {
+				optimisedPath.append(pathToAdd[i])
+			}
+			
+			path = [closestIntersect!] + optimisedPath
 		}
 		
 		pathTable.append((p1,p2,path))

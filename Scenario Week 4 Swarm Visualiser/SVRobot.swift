@@ -8,9 +8,7 @@
 
 import Cocoa
 
-func ==(lhs: SVRobot, rhs: SVRobot) -> Bool {
-	return lhs.start == rhs.start
-}
+
 
 class SVRobot: NSObject {
 	
@@ -32,6 +30,22 @@ class SVRobot: NSObject {
 	var available : Bool {
 		get {
 			return isActive && (target == nil)
+		}
+	}
+	
+	static func ==(lhs: SVRobot, rhs: SVRobot) -> Bool {
+		return lhs.start == rhs.start
+	}
+	
+	override public var debugDescription: String {
+		get {
+			return "Robot: (\(self.start.x), \(self.start.y))"
+		}
+	}
+	
+	override var description: String {
+		get {
+			return "Robot: (\(self.start.x), \(self.start.y))"
 		}
 	}
 
