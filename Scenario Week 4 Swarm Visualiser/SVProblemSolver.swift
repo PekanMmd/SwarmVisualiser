@@ -365,8 +365,8 @@ class SVProblemSolver: NSObject {
 		starter.activate()
 		
 		let target1 = closestUntargetedRobot(robot: starter)!
-		starter.current = target1.current
 		starter.path = starter.path + getShortestPathBetweenTwoRobots(r1: starter, r2: target1)
+		starter.current = target1.current
 		target1.activate()
 		
 		while !instanceIsComplete() {

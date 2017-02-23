@@ -25,13 +25,13 @@ class ViewController: NSViewController {
 		
 		
 //		// Problem Solver Code
-		let problemSolver = SVProblemSolver(instance: instance)
-		
-//		problemSolver.runFatBoyRunAlgorithm()
-//		problemSolver.marathonAlgorithm()
-		problemSolver.solveByStarCluster(numberOfClusters: 2)
-		
-		print(problemSolver.outputStringForInstance())
+//		let problemSolver = SVProblemSolver(instance: instance)
+//		
+////		problemSolver.runFatBoyRunAlgorithm()
+////		problemSolver.marathonAlgorithm()
+//		problemSolver.solveByStarCluster(numberOfClusters: 15)
+//		
+//		print(problemSolver.outputStringForInstance())
 		
 		
 		
