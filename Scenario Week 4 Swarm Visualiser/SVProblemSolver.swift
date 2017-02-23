@@ -117,9 +117,28 @@ class SVProblemSolver: NSObject {
 		return true
 	}
 	
-	func marathonAlgorithm() {
+	func runFatBoyRunAlgorithm() {
 		
-//		createPathTable()
+		let runner = instance.swarm[0]
+		runner.activate()
+		
+		while !instanceIsComplete() {
+			
+			for i in 1 ..< instance.swarm.count {
+				
+				let target = instance.swarm[i]
+				
+				let newPath = runner.path + getShortestPathBetweenTwoRobots(r1: runner, r2: target)
+				runner.path = newPath
+				runner.current = target.start
+				target.activate()
+				
+			}
+			
+		}
+	}
+	
+	func marathonAlgorithm() {
 		
 		let runner = instance.swarm[0]
 		runner.activate()

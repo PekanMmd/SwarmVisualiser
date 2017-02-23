@@ -25,7 +25,7 @@ class ViewController: NSViewController {
 		
 		let problemSolver = SVProblemSolver(instance: instance)
 		
-		problemSolver.marathonAlgorithm()
+		problemSolver.runFatBoyRunAlgorithm()
 		
 		print(problemSolver.outputStringForInstance())
 		
