@@ -23,6 +23,12 @@ class ViewController: NSViewController {
 		let inputFile = Bundle.main.path(forResource: "robots1", ofType: "txt") ?? ""
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
+		let problemSolver = SVProblemSolver(instance: instance)
+		
+		problemSolver.marathonAlgorithm()
+		
+		print(problemSolver.outputStringForInstance())
+		
 		display = SVDisplayView(frame: self.view.frame , svFrame: frameFromInstance())
 		
 		self.display.translatesAutoresizingMaskIntoConstraints = false
@@ -71,9 +77,26 @@ class ViewController: NSViewController {
 		var roboPoints = [CGPoint]()
 		
 		for robot in instance.swarm {
-			roboPoints.append(robot.current)
+//			roboPoints.append(robot.current)
+			roboPoints.append(robot.start)
 		}
-		return (roboPoints,instance.map)
+		
+		var lines = [SVEdge]()
+		
+		for robot in instance.swarm {
+			
+			if robot.path.count > 1 {
+				
+				for i in 0 ..< robot.path.count - 1 {
+					
+					lines.append((robot.path[i],robot.path[i+1]))
+					
+				}
+			}
+			
+		}
+		
+		return (roboPoints,instance.map, lines)
 	}
 	
 

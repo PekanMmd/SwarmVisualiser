@@ -20,52 +20,116 @@ class SVProblemSolver: NSObject {
 	}
 	
 	func createPathTable() {
-//		for robot in instance.swarm {
-//			
-//			var pathArray = [SVPath]()
-//			for target in instance.swarm {
-//				let path = getShortestPathBetweenTwoRobots(r1: robot, r2: target)
-//				pathArray.append(path)
-//			}
-//			
-//			pathTable.append(pathArray)
-//			
-//		}
-		
-	}
-	
-	func calculateShortestPathBetweenTwoCoordinates(co1: CGPoint, co2: CGPoint) -> SVPath {
-		//TODO: implement with obstacles
-		return [co2]
+		let builder = SVPathTableBuilder()
+		self.pathTable = builder.createTable(instance: self.instance)
 	}
 	
 	func getShortestPathBetweenTwoCoordinatesFromTable(co1: CGPoint, co2: CGPoint) -> SVPath {
 		
-//		var index1 : Int!
-//		var index2 : Int!
-//		
-//		for i in 0 ..< instance.swarm.count {
-//			
-//			if instance.swarm[i].start == co1 {
-//				index1 = i
-//			}
-//			
-//			if instance.swarm[i].start == co2 {
-//				index2 = i
-//			}
-//			
-//		}
-//		
-//		if (index1 == nil) || (index2 == nil) {
-//			return []
-//		}
-//		
-//		return pathTable[index1!][index2!]
+		for p in pathTable {
+			if (p.0 == co1) && (p.1 == co2) {
+				return p.2
+			}
+		}
+		
 		return []
 	}
 	
 	func getShortestPathBetweenTwoRobots(r1: SVRobot, r2: SVRobot) -> SVPath {
 		return getShortestPathBetweenTwoCoordinatesFromTable(co1: r1.current, co2: r2.current)
+	}
+	
+	func distanceBetweenPoints(p1: CGPoint, p2: CGPoint) -> Double {
+		
+		let maxx = max(p1.x,p2.x)
+		let minx = min(p1.x,p2.x)
+		let maxy = max(p1.y,p2.y)
+		let miny = min(p1.y,p2.y)
+		
+		let dx = Double(maxx - minx)
+		let dy = Double(maxy - miny)
+		
+		let dx2 = pow(dx,2)
+		let dy2 = pow(dy,2)
+		
+		return sqrt(dx2 + dy2)
+	}
+	
+	func lengthOfPath(path: SVPath) -> Double {
+		
+		var length : Double = 0
+		
+		for i in 0 ..< path.count - 1 {
+			length += distanceBetweenPoints(p1: path[i], p2: path[i+1])
+		}
+		
+		return length
+	}
+	
+	func closestRobotTo(robot: SVRobot) -> SVRobot {
+		var bots = instance.swarm.sorted { (r1, r2) -> Bool in
+			let p1 = getShortestPathBetweenTwoRobots(r1: robot, r2: r1)
+			let p2 = getShortestPathBetweenTwoRobots(r1: robot, r2: r2)
+			
+			return lengthOfPath(path: [robot.current] + p1) < lengthOfPath(path: [robot.current] + p2)
+		}
+		return bots[0]
+	}
+	
+	func closestInactiveRobotTo(robot: SVRobot) -> SVRobot? {
+		
+		var bots = instance.swarm.filter { (rob) -> Bool in
+			return !rob.isActive
+		}
+		
+		bots = bots.sorted { (r1, r2) -> Bool in
+			let p1 = getShortestPathBetweenTwoRobots(r1: robot, r2: r1)
+			let p2 = getShortestPathBetweenTwoRobots(r1: robot, r2: r2)
+			
+			return lengthOfPath(path: p1) < lengthOfPath(path: p2)
+		}
+		
+		if bots.count == 0 {
+			return nil
+		}
+		
+		return bots[0]
+	}
+	
+	/* Marathon algorithm
+
+	the starting robot visits each robot
+	
+	*/
+	
+	func instanceIsComplete() -> Bool {
+		for robot in instance.swarm {
+			if !robot.isActive {
+				return false
+			}
+		}
+		return true
+	}
+	
+	func marathonAlgorithm() {
+		
+		createPathTable()
+		
+		let runner = instance.swarm[0]
+		runner.activate()
+		
+		while !instanceIsComplete() {
+			let closest = closestInactiveRobotTo(robot: runner)
+			
+			if closest != nil {
+				let newPath = runner.path + getShortestPathBetweenTwoRobots(r1: runner, r2: closest!)
+				runner.path = newPath
+				runner.current = closest!.start
+				closest!.activate()
+			}
+		}
+		
+		
 	}
 	
 	
@@ -144,7 +208,22 @@ class SVProblemSolver: NSObject {
 		//TODO: implement
 	}
 	
-	
+	func outputStringForInstance() -> String {
+		var output = ""
+		for robot in instance.swarm {
+			
+			if robot.path.count > 1 {
+				for point in robot.path {
+					output += "(\(point.x), \(point.y)),"
+				}
+				output = output.substring(to: output.index(before: output.endIndex) )
+				output += ";"
+			}
+			
+		}
+		output = output.substring(to: output.index(before: output.endIndex) )
+		return output
+	}
 	
 	
 }

@@ -45,7 +45,7 @@ class SVDesign: NSObject {
 	}
 	
 	class func sizeLineWidth() -> CGFloat {
-		return 2.0
+		return 1.0
 	}
 	
 	class func sizeBorderWidth() -> CGFloat {

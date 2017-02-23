@@ -23,7 +23,6 @@ class SVPathTableBuilder: NSObject {
 	var instance : SVInstance!
 	var allEdges : [SVEdge]!
 	var corners : [CGPoint]!
-	var table = SVPathTable()
 	
 	func pointIsACorner(p: CGPoint) -> Bool {
 		for c in corners {
@@ -101,10 +100,7 @@ class SVPathTableBuilder: NSObject {
 		edges.append((polygon.last!,polygon.first!))
 		
 		for edge in edges {
-			if edge.0 == line.0 && edge.1 == line.1 {
-				return false
-			}
-			if edge.1 == line.0 && edge.0 == line.1 {
+			if line == edge {
 				return false
 			}
 		}
@@ -163,6 +159,14 @@ class SVPathTableBuilder: NSObject {
 			return nil
 		}
 		
+		if max(line.0.y, line.1.y) < min(edge.0.y, edge.1.y) {
+			return nil
+		}
+		
+		if max(edge.0.y, edge.1.y) < min(line.0.y, line.1.y) {
+			return nil
+		}
+		
 		var A1 : CGFloat!
 		var A2 : CGFloat!
 		var b1 : CGFloat = 0
@@ -189,12 +193,16 @@ class SVPathTableBuilder: NSObject {
 				return nil
 			}
 			
+			return Xa
+			
 		} else if A2 == nil {
 			Xa = edge.0.x
 			
 			if (Xa == line.0.x) || (Xa == line.1.x) {
 				return nil
 			}
+			
+			return Xa
 			
 		} else {
 			
@@ -261,17 +269,13 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
-		
 		return edgesIntersectedByLine(line: (p1,p2)).count == 0
 	}
 	
-	func lineBetweenPointsClosestPointFromIntersectedEdges(p1: CGPoint, p2: CGPoint) -> CGPoint? {
+	func lineBetweenPointsClosestPointFromIntersectedPolygons(p1: CGPoint, p2: CGPoint) -> CGPoint? {
 		
 		let line = (p1,p2)
 		var edges = edgesIntersectedByLine(line: line)
-		
-		// go from edges to polygons
-		let intersectedPolygonEdges = [SVEdge]()
 		
 		for polygon in instance.map {
 			var edgeList = [SVEdge]()
@@ -287,15 +291,17 @@ class SVPathTableBuilder: NSObject {
 			for edge in edgeList {
 				
 				if !polyAdded {
-					if edges.contains(where: { (e: (CGPoint, CGPoint)) -> Bool in return edge == e }) {
-						edges += edgeList
-						polyAdded = true
+					
+					for e in edges {
+						if e == edge {
+							edges += edgeList
+							polyAdded = true
+						}
 					}
 				}
 			}
 			
 		}
-		
 		
 		var points = pointsFromEdges(edges: edges)
 		
@@ -320,7 +326,7 @@ class SVPathTableBuilder: NSObject {
 	}
 	
 	func pathBetweenPoints(p1: CGPoint, p2: CGPoint) -> SVPath {
-		let closestIntersect = lineBetweenPointsClosestPointFromIntersectedEdges(p1: p1, p2: p2)
+		let closestIntersect = lineBetweenPointsClosestPointFromIntersectedPolygons(p1: p1, p2: p2)
 		
 		if closestIntersect == nil {
 			return [p2]
@@ -331,7 +337,9 @@ class SVPathTableBuilder: NSObject {
 	}
 	
 	
-	func createTable(instance: SVInstance) {
+	func createTable(instance: SVInstance) -> SVPathTable {
+		
+		var table = SVPathTable()
 		
 		self.instance = instance
 		self.allEdges = edgesFromMap(map: instance.map)
@@ -346,6 +354,7 @@ class SVPathTableBuilder: NSObject {
 				
 			}
 		}
+		return table
 	}
 
 }

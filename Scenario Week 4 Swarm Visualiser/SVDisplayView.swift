@@ -130,7 +130,11 @@ class SVDisplayView: NSView {
 			scalePolygon(poly: p)
 		}
 		
-		return (robots,obstacles)
+		let lines = frame.lines.map { (e:SVEdge) -> SVEdge in
+			(scaleCoordinate(coord: e.0),scaleCoordinate(coord: e.1))
+		}
+		
+		return (robots,obstacles,lines)
 	}
 	
 	func scaleCoordinate(coord: CGPoint) -> CGPoint {
@@ -162,6 +166,10 @@ class SVDisplayView: NSView {
 		
 		for obstacle in displayFrame.obstacles {
 			drawObstacle(obstacle: obstacle, colour: SVDesign.colourRed())
+		}
+		
+		for line in displayFrame.lines {
+			drawLine(startx: line.0.x, starty: line.0.y, endx: line.1.x, endy: line.1.y, colour: SVDesign.colourGreen())
 		}
 		
 		for robot in displayFrame.robots {

@@ -59,8 +59,6 @@ class SVInputReader: SVIOReader {
             }
             
         }
-		
-		arrayOfObjects.append(stringOfObject)
         
         arrayOfObjects += separateStringBySemiColons(rep: obstaclesString)
 		
