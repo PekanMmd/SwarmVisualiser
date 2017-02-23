@@ -83,14 +83,38 @@ class SVPathTableBuilder: NSObject {
 	}
 	
 	
-	func midPointForLine(edge: SVEdge) -> SVPoint {
+	func checkPointsForLine(edge: SVEdge) -> (SVPoint, SVPoint) {
 		
-		let midX = (edge.0.x + edge.1.x) / 2
-		let midY = (edge.0.y + edge.1.y) / 2
+		let checkThreshold : Double = 0.01
 		
-		return SVPoint(x: midX, y: midY)
+		let dx : Double = edge.1.x - edge.0.x
+		let dy : Double = edge.1.y - edge.0.y
+		
+		let minX = dx * checkThreshold + edge.0.x
+		let minY = dy * checkThreshold + edge.0.y
+		
+		let maxX = edge.1.x - dx * checkThreshold
+		let maxY = edge.1.y - dy * checkThreshold
+		
+		return (SVPoint(x: minX, y: minY), SVPoint(x: maxX, y: maxY))
 	}
 
+	func minMaxXForPolygon(polygon: SVPolygon) -> (Double, Double) {
+		
+		var minx = polygon[0].x
+		var maxx = polygon[0].x
+		
+		for p in polygon {
+			if p.x < minx {
+				minx = p.x
+			}
+			if p.x > maxx {
+				maxx = p.x
+			}
+		}
+		return (minx - 0.000001, maxx + 0.000001)
+	}
+	
 	func doesLine(line: SVEdge, PassThroughPolygon polygon: SVPolygon) -> Bool {
 		
 		var edges = [SVEdge]()
@@ -107,15 +131,23 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
-		let midpoint = midPointForLine(edge: line)
-		let yVal = midpoint.y
+		let checkpoints = checkPointsForLine(edge: line)
 		
-		let horizon : SVEdge = (SVPoint(x: -200, y: yVal),SVPoint(x: 200, y: yVal))
+		let checkpoint = checkpoints.0
+		let checkpoint2 = checkpoints.1
+		
+		let yVal = checkpoint.y
+		
+		let minMax = minMaxXForPolygon(polygon: polygon)
+		let horizon : SVEdge = (SVPoint(x: minMax.0, y: yVal),SVPoint(x: minMax.1, y: yVal))
+		let horizon2 : SVEdge = (SVPoint(x: minMax.0, y: checkpoint2.y),SVPoint(x: minMax.1, y: checkpoint2.y))
 		
 		var intersects = [Double?]()
+		var intersects2 = [Double?]()
 		
 		for edge in edges {
 			intersects.append(xCoordWhereLine(line: horizon, IntersectsEdge: edge))
+			intersects2.append(xCoordWhereLine(line: horizon2, IntersectsEdge: edge))
 		}
 		
 		intersects = intersects.filter { (p) -> Bool in
@@ -126,19 +158,34 @@ class SVPathTableBuilder: NSObject {
 			return p1! < p2!
 		}
 		
-		if intersects.count == 0 {
+		intersects2 = intersects2.filter { (p) -> Bool in
+			return p != nil
+		}
+		
+		intersects2 = intersects2.sorted { (p1, p2) -> Bool in
+			return p1! < p2!
+		}
+		
+		if (intersects.count == 0) && (intersects2.count == 0) {
 			return false
 		}
 		
 		var leftNodesCount = 0
+		var leftNodesCount2 = 0
 		
 		for p in intersects {
-			if p! < midpoint.x {
+			if p! < checkpoint.x {
 				leftNodesCount += 1
 			}
 		}
 		
-		return leftNodesCount % 2 != 0
+		for p in intersects2 {
+			if p! < checkpoint2.x {
+				leftNodesCount2 += 1
+			}
+		}
+		
+		return (leftNodesCount % 2 != 0) || (leftNodesCount2 % 2 != 0)
 		
 	}
 	

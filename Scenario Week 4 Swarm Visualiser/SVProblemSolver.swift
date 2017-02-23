@@ -297,9 +297,48 @@ class SVProblemSolver: NSObject {
 		return untargeted[0]
 	}
 	
+	func closestUntargetedRobot(robot: SVRobot) -> SVRobot? {
+		var untargeted = instance.swarm.filter { (rob: SVRobot) -> Bool in
+			return !rob.targeted && !rob.isActive
+		}
+		
+		if untargeted.count == 0 {
+			return nil
+		}
+		
+		untargeted.sort { (r1, r2) -> Bool in
+			return distanceBetweenRobots(r1: robot, r2: r1) < distanceBetweenRobots(r1: robot, r2: r2)
+		}
+		
+		return untargeted[0]
+	}
+	
 	
 	func solveByKCluster(k: Int) {
-		//TODO: implement
+		/*
+		3. starting robot adds closest robot to its path, moves to it and makes it active
+		4. for each active robot:
+		- if no active robot in its cluster is targeting a robot in a different cluster then target a robot in a different cluster
+		- else if there are no inactive or untargeted robots in this cluster and another cluster is untargeted then target closest robot in closest untargeted cluster
+		- else if there is an inactive and untargeted robot in this cluster then target the closest one
+		- else if it is the closest (active or targeted) robot to an inactive robot in any cluster then target it
+		5. for each robot targeting another, add the path to that target to its path, move to the target's position and activate the target.
+		6. untarget all robots
+		7. repeat until all robots are active
+		8. for each robot with a path longer than 1, add its path to the solution
+		
+		*/
+		
+		divideIntoKClusters(k: k)
+		
+		let starter = instance.swarm[0]
+		starter.activate()
+		
+		let target1 = closestUntargetedRobot(robot: starter)
+		
+		
+		
+		
 	}
 	
 	func getAllPoints() -> [String] {

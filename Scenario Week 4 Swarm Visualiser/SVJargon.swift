@@ -65,7 +65,7 @@ extension SVPoint : CustomDebugStringConvertible {
 
 extension SVPoint : Equatable {
 	public static func ==(lhs: SVPoint, rhs: SVPoint) -> Bool {
-		return (lhs.x == rhs.x) && (lhs.y == rhs.y)
+		return compareDoubles(d1: lhs.x, d2: rhs.x) && compareDoubles(d1: lhs.y, d2: rhs.y)
 	}
 }
 
