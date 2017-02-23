@@ -71,7 +71,7 @@ class ViewController: NSViewController {
 	
 	func frameFromInstance() -> SVFrame {
 		
-		var roboPoints = [CGPoint]()
+		var roboPoints = [SVPoint]()
 		
 		for robot in instance.swarm {
 //			roboPoints.append(robot.current)

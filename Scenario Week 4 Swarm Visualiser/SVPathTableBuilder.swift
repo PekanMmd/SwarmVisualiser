@@ -8,8 +8,8 @@
 
 import Cocoa
 
-func compareDoubles(d1: CGFloat, d2: CGFloat) -> Bool {
-	let kThreshold : CGFloat = 0.000000001
+func compareDoubles(d1: Double, d2: Double) -> Bool {
+	let kThreshold : Double = 0.000000001
 	return (abs(d1 - d2) < kThreshold)
 }
 
@@ -22,9 +22,9 @@ class SVPathTableBuilder: NSObject {
 	
 	var instance : SVInstance!
 	var allEdges : [SVEdge]!
-	var corners : [CGPoint]!
+	var corners : [SVPoint]!
 	
-	func pointIsACorner(p: CGPoint) -> Bool {
+	func pointIsACorner(p: SVPoint) -> Bool {
 		for c in corners {
 			if p == c {
 				return true
@@ -52,12 +52,12 @@ class SVPathTableBuilder: NSObject {
 		return edges
 	}
 	
-	func pointsFromEdge(edge: SVEdge) -> [CGPoint] {
+	func pointsFromEdge(edge: SVEdge) -> [SVPoint] {
 		return [edge.0,edge.1]
 	}
 	
-	func pointsFromEdges(edges: [SVEdge]) -> [CGPoint] {
-		var points = [CGPoint]()
+	func pointsFromEdges(edges: [SVEdge]) -> [SVPoint] {
+		var points = [SVPoint]()
 		
 		for edge in edges {
 			points += pointsFromEdge(edge: edge)
@@ -66,7 +66,7 @@ class SVPathTableBuilder: NSObject {
 		return points
 	}
 	
-	func minMaxXForEdge(edge: SVEdge) -> (CGFloat, CGFloat) {
+	func minMaxXForEdge(edge: SVEdge) -> (Double, Double) {
 		let minx = min(edge.0.x, edge.1.x)
 		let maxx = max(edge.0.x, edge.1.x)
 		return (minx,maxx)
@@ -81,12 +81,12 @@ class SVPathTableBuilder: NSObject {
 	}
 	
 	
-	func midPointForLine(edge: SVEdge) -> CGPoint {
+	func midPointForLine(edge: SVEdge) -> SVPoint {
 		
 		let midX = (edge.0.x + edge.1.x) / 2
 		let midY = (edge.0.y + edge.1.y) / 2
 		
-		return CGPoint(x: midX, y: midY)
+		return SVPoint(x: midX, y: midY)
 	}
 
 	func doesLine(line: SVEdge, PassThroughPolygon polygon: SVPolygon) -> Bool {
@@ -108,9 +108,9 @@ class SVPathTableBuilder: NSObject {
 		let midpoint = midPointForLine(edge: line)
 		let yVal = midpoint.y
 		
-		let horizon : SVEdge = (CGPoint(x: -200, y: yVal),CGPoint(x: 200, y: yVal))
+		let horizon : SVEdge = (SVPoint(x: -200, y: yVal),SVPoint(x: 200, y: yVal))
 		
-		var intersects = [CGFloat?]()
+		var intersects = [Double?]()
 		
 		for edge in edges {
 			intersects.append(xCoordWhereLine(line: horizon, IntersectsEdge: edge))
@@ -140,7 +140,7 @@ class SVPathTableBuilder: NSObject {
 		
 	}
 	
-	func xCoordWhereLine(line: SVEdge, IntersectsEdge edge: SVEdge) -> CGFloat? {
+	func xCoordWhereLine(line: SVEdge, IntersectsEdge edge: SVEdge) -> Double? {
 		
 		if (line.0 == edge.0) || (line.1 == edge.0) || (line.0 == edge.1) || (line.1 == edge.1) {
 			return nil
@@ -167,10 +167,10 @@ class SVPathTableBuilder: NSObject {
 			return nil
 		}
 		
-		var A1 : CGFloat!
-		var A2 : CGFloat!
-		var b1 : CGFloat = 0
-		var b2 : CGFloat = 0
+		var A1 : Double!
+		var A2 : Double!
+		var b1 : Double = 0
+		var b2 : Double = 0
 		
 		if !lineIsVertical(line: line) {
 			A1 = (line.0.y - line.1.y) / (line.0.x - line.1.x)
@@ -184,7 +184,7 @@ class SVPathTableBuilder: NSObject {
 			return nil
 		}
 		
-		var Xa : CGFloat!
+		var Xa : Double!
 		
 		if A1 == nil {
 			Xa = line.0.x
@@ -240,7 +240,7 @@ class SVPathTableBuilder: NSObject {
 		return edges
 	}
 	
-	func distanceBetweenPoints(p1: CGPoint, p2: CGPoint) -> Double {
+	func distanceBetweenPoints(p1: SVPoint, p2: SVPoint) -> Double {
 		
 		let maxx = max(p1.x,p2.x)
 		let minx = min(p1.x,p2.x)
@@ -256,7 +256,7 @@ class SVPathTableBuilder: NSObject {
 		return sqrt(dx2 + dy2)
 	}
 	
-	func point(p1: CGPoint, isVisibleFromPoint p2: CGPoint) -> Bool {
+	func point(p1: SVPoint, isVisibleFromPoint p2: SVPoint) -> Bool {
 		
 		if  pointIsACorner(p: p1) && pointIsACorner(p: p2) {
 			for polygon in instance.map {
@@ -272,7 +272,7 @@ class SVPathTableBuilder: NSObject {
 		return edgesIntersectedByLine(line: (p1,p2)).count == 0
 	}
 	
-	func lineBetweenPointsClosestPointFromIntersectedPolygons(p1: CGPoint, p2: CGPoint) -> CGPoint? {
+	func lineBetweenPointsClosestPointFromIntersectedPolygons(p1: SVPoint, p2: SVPoint) -> SVPoint? {
 		
 		let line = (p1,p2)
 		var edges = edgesIntersectedByLine(line: line)
@@ -309,7 +309,7 @@ class SVPathTableBuilder: NSObject {
 			return nil
 		}
 		
-		points = points.filter({ (p:CGPoint) -> Bool in
+		points = points.filter({ (p:SVPoint) -> Bool in
 			return point(p1: p, isVisibleFromPoint: p1)
 		})
 		
@@ -318,14 +318,14 @@ class SVPathTableBuilder: NSObject {
 			return nil
 		}
 		
-		points = points.sorted(by: { (point1:CGPoint, point2:CGPoint) -> Bool in
+		points = points.sorted(by: { (point1:SVPoint, point2:SVPoint) -> Bool in
 			return distanceBetweenPoints(p1: p2, p2: point1) < distanceBetweenPoints(p1: p2, p2: point2)
 		})
 		
 		return points[0]
 	}
 	
-	func pathBetweenPoints(p1: CGPoint, p2: CGPoint) -> SVPath {
+	func pathBetweenPoints(p1: SVPoint, p2: SVPoint) -> SVPath {
 		let closestIntersect = lineBetweenPointsClosestPointFromIntersectedPolygons(p1: p1, p2: p2)
 		
 		if closestIntersect == nil {

@@ -30,6 +30,31 @@ class SVInputReader: SVIOReader {
 		
 		return (swarm,map)
 	}
+	
+	class func getAllInputPoints(inputFilename: String) -> [String] {
+		
+		var list = [String]()
+		
+		let input = getTextFromInputFile(filename: inputFilename)
+		let objects = separateObjectStringsFromTextFile(text: input)
+		
+		for object in objects {
+			if stringRepresentsRobot(rep: object) {
+				let coordinates = convertStringToCoordinatesString(rep: object)
+				list.append(coordinates.0)
+				list.append(coordinates.1)
+			} else {
+				let points = separateObstacleStringIntoCoordinates(rep: object)
+				for point in points {
+					let coordinates = convertStringToCoordinatesString(rep: point)
+					list.append(coordinates.0)
+					list.append(coordinates.1)
+				}
+			}
+		}
+		
+		return list
+	}
 
 	private class func separateObjectStringsFromTextFile(text: String) -> [String] {
         var hasReachedHashtag = false
@@ -98,8 +123,8 @@ class SVInputReader: SVIOReader {
 			coords.append(convertStringToCoordinates(rep: point))
 		}
         
-		return coords.map({ (point: (x:Double, y:Double)) -> CGPoint in
-			return CGPoint(x: point.x, y: point.y)
+		return coords.map({ (point: (x:Double, y:Double)) -> SVPoint in
+			return SVPoint(x: point.x, y: point.y)
 		})
 	}
 	

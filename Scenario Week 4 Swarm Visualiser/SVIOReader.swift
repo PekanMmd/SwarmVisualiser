@@ -20,7 +20,7 @@ class SVIOReader {
 		
 		return contents
 	}
-
+	
 	class func convertStringToCoordinates(rep: String) -> (x:Double, y:Double) {
 		
 		var xcoordinateString = ""
@@ -42,6 +42,26 @@ class SVIOReader {
 		let ycoordinate = Double(ycoordinateString) ?? 0
 		
 		return (xcoordinate,ycoordinate)
+	}
+
+	class func convertStringToCoordinatesString(rep: String) -> (x:String, y:String) {
+		
+		var xcoordinateString = ""
+		var ycoordinateString = ""
+		var comma = 0
+		
+		for i in rep.characters {
+			if (i == ","){
+				comma = 1
+			}
+			if (i != "(" && comma == 0){
+				xcoordinateString.append(i)
+			} else if (i != ")" && comma == 1 && i != "," && i != " ") {
+				ycoordinateString.append(i)
+			}
+		}
+				
+		return (xcoordinateString,ycoordinateString)
 	}
 	
 	class func separateStringBySemiColons(rep: String) -> [String] {

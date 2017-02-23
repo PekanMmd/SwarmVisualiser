@@ -26,7 +26,7 @@ class SVProblemSolver: NSObject {
 //		self.pathTable = builder.createTable(instance: self.instance)
 //	}
 	
-	func getShortestPathBetweenTwoCoordinatesFromTable(co1: CGPoint, co2: CGPoint) -> SVPath {
+	func getShortestPathBetweenTwoCoordinatesFromTable(co1: SVPoint, co2: SVPoint) -> SVPath {
 		
 		for p in pathTable {
 			if (p.0 == co1) && (p.1 == co2) {
@@ -45,7 +45,7 @@ class SVProblemSolver: NSObject {
 		return getShortestPathBetweenTwoCoordinatesFromTable(co1: r1.current, co2: r2.current)
 	}
 	
-	func distanceBetweenPoints(p1: CGPoint, p2: CGPoint) -> Double {
+	func distanceBetweenPoints(p1: SVPoint, p2: SVPoint) -> Double {
 		
 		let maxx = max(p1.x,p2.x)
 		let minx = min(p1.x,p2.x)
@@ -163,6 +163,30 @@ class SVProblemSolver: NSObject {
 	
 	func divideIntoKClusters(k: Int) {
 		//TODO: implement
+		let first = instance.swarm[0]
+		
+		var minx = first.start.x
+		var miny = first.start.y
+		var maxx = first.start.x
+		var maxy = first.start.y
+		
+		for robot in instance.swarm {
+			if robot.start.x < minx {
+				minx = robot.start.x
+			}
+			if robot.start.x > maxx {
+				maxx = robot.start.x
+			}
+			if robot.start.y < miny {
+				miny = robot.start.y
+			}
+			if robot.start.y > maxy {
+				maxy = robot.start.y
+			}
+		}
+		
+		
+		
 	}
 	
 	func minXForCluster(cluster: SVCluster) {
@@ -210,13 +234,33 @@ class SVProblemSolver: NSObject {
 		//TODO: implement
 	}
 	
+	func getAllPoints() -> [String] {
+		return SVInputReader.getAllInputPoints(inputFilename: Bundle.main.path(forResource: "input", ofType: "txt") ?? "")
+	}
+	
+	func matchPointFromList(match: Double, points: [String]) -> String {
+		for p in points {
+			if compareDoubles(d1: match, d2: Double(p)!) {
+				return p
+			}
+		}
+		return ""
+	}
+	
 	func outputStringForInstance() -> String {
 		var output = ""
+		
+		let list = getAllPoints()
+		
 		for robot in instance.swarm {
 			
 			if robot.path.count > 1 {
 				for point in robot.path {
-					output += "(\(point.x), \(point.y)),"
+					
+					let x = matchPointFromList(match: point.x, points: list)
+					let y = matchPointFromList(match: point.y, points: list)
+					
+					output += "(\(x), \(y)),"
 				}
 				output = output.substring(to: output.index(before: output.endIndex) )
 				output += ";"

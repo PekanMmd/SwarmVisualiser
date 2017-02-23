@@ -14,8 +14,8 @@
 //	
 //	init(coordinates : [(Double,Double)]) {
 //		super.init()
-//		let co = coordinates.map { (coords: (x: Double, y: Double)) -> CGPoint in
-//			return CGPoint(x: coords.x, y: coords.y)
+//		let co = coordinates.map { (coords: (x: Double, y: Double)) -> SVPoint in
+//			return SVPoint(x: coords.x, y: coords.y)
 //		}
 //		self.coordinates = co
 //	}

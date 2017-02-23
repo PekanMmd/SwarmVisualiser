@@ -88,10 +88,10 @@ class SVDisplayView: NSView {
 	func setMinsAndMaxsForFrame(frame: SVFrame) {
 		
 		let startRobot = frame.robots[0]
-		minx = startRobot.x
-		miny = startRobot.y
-		maxx = startRobot.x
-		maxy = startRobot.y
+		minx = CGFloat(startRobot.x)
+		miny = CGFloat(startRobot.y)
+		maxx = CGFloat(startRobot.x)
+		maxy = CGFloat(startRobot.y)
 		
 		for robot in frame.robots {
 			compareMinMaxForPoint(point: robot)
@@ -105,24 +105,24 @@ class SVDisplayView: NSView {
 		
 	}
 	
-	func compareMinMaxForPoint(point: CGPoint) {
-		if point.x < minx {
-			minx = point.x
+	func compareMinMaxForPoint(point: SVPoint) {
+		if CGFloat(point.x) < minx {
+			minx = CGFloat(point.x)
 		}
-		if point.x > maxx {
-			maxx = point.x
+		if CGFloat(point.x) > maxx {
+			maxx = CGFloat(point.x)
 		}
-		if point.y < miny {
-			miny = point.y
+		if CGFloat(point.y) < miny {
+			miny = CGFloat(point.y)
 		}
-		if point.y > maxy {
-			maxy = point.y
+		if CGFloat(point.y) > maxy {
+			maxy = CGFloat(point.y)
 		}
 	}
 	
 	func scaleFrame(frame: SVFrame) -> SVFrame {
 		
-		let robots = frame.robots.map({ (p:CGPoint) -> CGPoint in
+		let robots = frame.robots.map({ (p:SVPoint) -> SVPoint in
 			scaleCoordinate(coord: p)
 		})
 		
@@ -137,16 +137,16 @@ class SVDisplayView: NSView {
 		return (robots,obstacles,lines)
 	}
 	
-	func scaleCoordinate(coord: CGPoint) -> CGPoint {
+	func scaleCoordinate(coord: SVPoint) -> SVPoint {
 		
-		let x = (coord.x - minx) * scaleFactor + framePaddingX
-		let y = (coord.y - miny) * scaleFactor + framePaddingY
+		let x = (CGFloat(coord.x) - minx) * scaleFactor + framePaddingX
+		let y = (CGFloat(coord.y) - miny) * scaleFactor + framePaddingY
 		
-		return CGPoint(x: x, y: y)
+		return SVPoint(x: Double(x), y: Double(y))
 	}
 	
 	func scalePolygon(poly: SVPolygon) -> SVPolygon {
-		return poly.map({ (p:CGPoint) -> CGPoint in
+		return poly.map({ (p:SVPoint) -> SVPoint in
 			scaleCoordinate(coord: p)
 		})
 	}
@@ -169,7 +169,7 @@ class SVDisplayView: NSView {
 		}
 		
 		for line in displayFrame.lines {
-			drawLine(startx: line.0.x, starty: line.0.y, endx: line.1.x, endy: line.1.y, colour: SVDesign.colourGreen())
+			drawLine(startx: CGFloat(line.0.x), starty: CGFloat(line.0.y), endx: CGFloat(line.1.x), endy: CGFloat(line.1.y), colour: SVDesign.colourGreen())
 		}
 		
 		for robot in displayFrame.robots {
@@ -184,7 +184,7 @@ class SVDisplayView: NSView {
 		context.setStrokeColor(colour.cgColor)
 		context.setFillColor(colour.cgColor)
 		
-		context.addRect(CGRect(x: robot.x - kRobotRadius, y: robot.y - kRobotRadius, width: robotDiammeter, height: robotDiammeter))
+		context.addRect(CGRect(x: CGFloat(robot.x) - kRobotRadius, y: CGFloat(robot.y) - kRobotRadius, width: robotDiammeter, height: robotDiammeter))
 		context.drawPath(using: .fillStroke)
 		
 	}
@@ -219,10 +219,10 @@ class SVDisplayView: NSView {
 			context.setStrokeColor(lineColour.cgColor)
 			context.setFillColor(fillColour.cgColor)
 			
-			context.move(to: polygon[0])
+			context.move(to: polygon[0].toCGPoint)
 			
 			for i in 1 ..< polygon.count {
-				context.addLine(to: polygon[i])
+				context.addLine(to: polygon[i].toCGPoint)
 			}
 			
 			context.closePath()

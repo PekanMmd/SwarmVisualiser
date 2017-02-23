@@ -22,8 +22,8 @@ class SVRobot: NSObject {
 		}
 	}
 	
-	var start : CGPoint!
-	var current : CGPoint!
+	var start : SVPoint!
+	var current : SVPoint!
 	
 	var target : SVRobot?
 	var path : SVPath!
@@ -37,7 +37,7 @@ class SVRobot: NSObject {
 	init(x: Double, y: Double) {
 		super.init()
 		
-		let point = CGPoint(x: x, y: y)
+		let point = SVPoint(x: x, y: y)
 		
 		self.start = point
 		self.current = point
