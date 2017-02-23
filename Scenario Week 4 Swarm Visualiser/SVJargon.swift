@@ -32,6 +32,7 @@ typealias SVCluster = SVPolygon
 typealias SVPath = [SVPoint]
 typealias SVPathTable = [ (SVPoint, SVPoint, SVPath) ]
 typealias SVEdge = (SVPoint, SVPoint)
+typealias SVEdgeTable = [ (SVEdge, SVEdge, Bool) ]
 
 public struct SVPoint {
 	

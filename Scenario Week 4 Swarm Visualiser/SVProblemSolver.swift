@@ -29,7 +29,7 @@ class SVProblemSolver: NSObject {
 			}
 		}
 		
-		let path = builder.pathBetweenPoints(p1: co1, p2: co2, optimised: false)
+		let path = builder.pathBetweenPoints(p1: co1, p2: co2, optimised: true, visited: [co1])
 		
 		pathTable.append((co1,co2,path))
 		
