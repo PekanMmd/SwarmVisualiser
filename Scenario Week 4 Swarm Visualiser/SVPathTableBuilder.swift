@@ -364,7 +364,7 @@ class SVPathTableBuilder: NSObject {
 			return nil
 		}
 		
-		points.filter { (p) -> Bool in
+		points = points.filter { (p) -> Bool in
 			return !visited.contains(p)
 		}
 		
