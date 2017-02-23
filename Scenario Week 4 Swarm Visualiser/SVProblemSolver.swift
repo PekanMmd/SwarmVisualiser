@@ -89,8 +89,8 @@ class SVProblemSolver: NSObject {
 		}
 		
 		bots = bots.sorted { (r1, r2) -> Bool in
-			let p1 = getShortestPathBetweenTwoRobots(r1: robot, r2: r1)
-			let p2 = getShortestPathBetweenTwoRobots(r1: robot, r2: r2)
+			let p1 = [robot.current] + getShortestPathBetweenTwoRobots(r1: robot, r2: r1)
+			let p2 = [robot.current] + getShortestPathBetweenTwoRobots(r1: robot, r2: r2)
 			
 			return lengthOfPath(path: p1) < lengthOfPath(path: p2)
 		}
