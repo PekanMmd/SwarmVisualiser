@@ -308,6 +308,14 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
+		for polygon in instance.map {
+			if doesLine(line: line, PassThroughPolygon: polygon) {
+				for edge in edgesFromPolygon(polygon: polygon) {
+					edges.append(edge)
+				}
+			}
+		}
+		
 		return edges
 	}
 	
@@ -607,7 +615,7 @@ class SVPathTableBuilder: NSObject {
 		closestIntersects = lineBetweenPointsClosestPointsFromIntersectedPolygons(p1: p1, p2: p2, visited: visited)
 		
 		if closestIntersects == nil {
-			return nil
+			return [p2]
 		}
 		
 		for intersect in closestIntersects! {
