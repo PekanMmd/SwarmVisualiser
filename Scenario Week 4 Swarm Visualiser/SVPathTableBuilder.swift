@@ -536,7 +536,6 @@ class SVPathTableBuilder: NSObject {
 				}
 				if point(point: p1, impingesOnEdge: edge) {
 					edges = edges + [edge]
-					break
 				}
 			}
 			
@@ -586,9 +585,20 @@ class SVPathTableBuilder: NSObject {
 		})
 		
 		if points.count == 0 {
-			points = pointsFromEdges(edges: edges).sorted(by: { (point1:SVPoint, point2:SVPoint) -> Bool in
-				return distanceBetweenPoints(p1: p1, p2: point1) < distanceBetweenPoints(p1: p1, p2: point2)
+			points = pointsFromEdges(edges: edges)
+			
+			points = points.filter { (p) -> Bool in
+				return !visited.contains(p)
+			}
+			
+			points = points.filter({ (p:SVPoint) -> Bool in
+				return point(p1: p, isVisibleFromPoint: p2, prioritiseAdjacents: kPrioritiseAdjacentPaths)
 			})
+				
+			points = points.sorted(by: { (point1:SVPoint, point2:SVPoint) -> Bool in
+				return distanceBetweenPoints(p1: p2, p2: point1) < distanceBetweenPoints(p1: p2, p2: point2)
+			})
+			
 		} else {
 			points = points.sorted(by: { (point1:SVPoint, point2:SVPoint) -> Bool in
 				return distanceBetweenPoints(p1: p2, p2: point1) < distanceBetweenPoints(p1: p2, p2: point2)
@@ -601,6 +611,12 @@ class SVPathTableBuilder: NSObject {
 	func pathBetweenPoints(p1: SVPoint, p2: SVPoint, optimised: Bool, visited: [SVPoint]) -> SVPath? {
 		var closestIntersects : [SVPoint]!
 		var path = [p2]
+		
+		for (pa,pb,path) in pathTable {
+			if (p1 == pa) && (p2 == pb) {
+				return path
+			}
+		}
 		
 		if pointsAreOnSameEdge(p1: p1, p2: p2) {
 			path = [p2]
@@ -617,24 +633,34 @@ class SVPathTableBuilder: NSObject {
 		closestIntersects = lineBetweenPointsClosestPointsFromIntersectedPolygons(p1: p1, p2: p2, visited: visited)
 		
 		if closestIntersects == nil {
+			print("uh oh...")
 			return [p2]
 		}
 		
 		for intersect in closestIntersects! {
 			
-			if intersect == p1 {
-				continue
+			var pathToIntersect : SVPath!
+			if point(p1: p1, isVisibleFromPoint: intersect, prioritiseAdjacents: false) {
+				pathToIntersect = [intersect]
+			} else {
+				// find one step path to intersect
+				for p in pointsFromEdges(edges: allEdges) {
+					if point(p1: p1, isVisibleFromPoint: p, prioritiseAdjacents: false) {
+						if point(p1: p, isVisibleFromPoint: intersect, prioritiseAdjacents: false) {
+							pathToIntersect = [p,intersect]
+							break
+						}
+					}
+				}
 			}
-			
-			var pathToAdd = pathBetweenPoints(p1: intersect, p2: p2, optimised: optimised, visited: visited + [intersect])
-			
-			if pathToAdd == nil {
-				continue
-			}
-			
-			let pathToIntersect = pathBetweenPoints(p1: p1, p2: intersect, optimised: optimised, visited: visited)
 			
 			if pathToIntersect == nil {
+				continue
+			}
+			
+			var pathToAdd = pathBetweenPoints(p1: intersect, p2: p2, optimised: optimised, visited: visited + pathToIntersect!)
+			
+			if pathToAdd == nil {
 				continue
 			}
 			
