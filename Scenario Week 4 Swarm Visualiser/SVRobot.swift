@@ -9,7 +9,7 @@
 import Cocoa
 
 
-
+var lastIndex = 0
 class SVRobot: NSObject {
 	
 	private var activated = false
@@ -21,11 +21,14 @@ class SVRobot: NSObject {
 		}
 	}
 	
+	var index = 0
+	
 	var start : SVPoint!
 	var current : SVPoint!
 	
 	var target : SVRobot?
 	var path : SVPath!
+	var pathIndex : Int = 0
 	
 	var available : Bool {
 		get {
@@ -58,6 +61,9 @@ class SVRobot: NSObject {
 		self.current = point
 		
 		self.path = [start]
+		
+		self.index = lastIndex
+		lastIndex += 1
 		
 	}
 	

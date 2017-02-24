@@ -685,10 +685,12 @@ class SVPathTableBuilder: NSObject {
 				} else {
 					for p in pointsFromEdges(edges: allEdges) {
 						if pathToIntersect == nil {
-							let oneStop = onePointPathBetweenPoints(pointA: p1, pointB: intersect, visited: visited)
-							if oneStop != nil {	pathToIntersect = pathBetweenPoints(p1: p1, p2: p, optimised: optimised, visited: visited + oneStop!)
-								if pathToIntersect != nil {
-									pathToIntersect = pathToIntersect! + oneStop!
+							if !visited.contains(p) {
+								let oneStop = onePointPathBetweenPoints(pointA: p1, pointB: intersect, visited: visited)
+								if oneStop != nil {	pathToIntersect = pathBetweenPoints(p1: p1, p2: p, optimised: optimised, visited: visited + oneStop! + [p])
+									if pathToIntersect != nil {
+										pathToIntersect = pathToIntersect! + oneStop!
+									}
 								}
 							}
 						}

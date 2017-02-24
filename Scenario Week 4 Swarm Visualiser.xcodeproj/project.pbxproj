@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8D568DDF1E5B9F5400E13844 /* input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D568DDE1E5B9F5400E13844 /* input.txt */; };
+		B21054751E60842B00FE25EA /* output.txt in Resources */ = {isa = PBXBuildFile; fileRef = B21054741E60842B00FE25EA /* output.txt */; };
 		B22A46941E5B221E00BE3741 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46931E5B221E00BE3741 /* AppDelegate.swift */; };
 		B22A46961E5B221E00BE3741 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22A46951E5B221E00BE3741 /* ViewController.swift */; };
 		B22A46981E5B221E00BE3741 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22A46971E5B221E00BE3741 /* Assets.xcassets */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		8D568DDE1E5B9F5400E13844 /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
+		B21054741E60842B00FE25EA /* output.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = output.txt; sourceTree = "<group>"; };
 		B22A46901E5B221E00BE3741 /* Scenario Week 4 Swarm Visualiser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scenario Week 4 Swarm Visualiser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B22A46931E5B221E00BE3741 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B22A46951E5B221E00BE3741 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				8D568DDE1E5B9F5400E13844 /* input.txt */,
+				B21054741E60842B00FE25EA /* output.txt */,
 				B22A46931E5B221E00BE3741 /* AppDelegate.swift */,
 				B22A46A21E5B22F900BE3741 /* SVRobot.swift */,
 				B2FAF6AA1E5DE82500446E8A /* SVPathTableBuilder.swift */,
@@ -155,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B22A46981E5B221E00BE3741 /* Assets.xcassets in Resources */,
+				B21054751E60842B00FE25EA /* output.txt in Resources */,
 				8D568DDF1E5B9F5400E13844 /* input.txt in Resources */,
 				B22A469B1E5B221E00BE3741 /* Main.storyboard in Resources */,
 			);

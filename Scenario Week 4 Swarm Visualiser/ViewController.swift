@@ -9,7 +9,7 @@
 import Cocoa
 
 // Algorithm Constants
-let kNumberOfClusters				: Int    = 9
+let kNumberOfClusters				: Int    = 6
 let kIntersectionGradation			: Double = 25
 let kIntersectionSkip				: Double = 25
 let kPrioritiseAdjacentPaths		: Bool	 = true
@@ -20,7 +20,7 @@ let kStarClusterNoChill				: Bool	 = false
 
 class ViewController: NSViewController {
 	
-	var frameRate : SVFramesPerSecond = 9
+	var frameRate : SVFramesPerSecond = 100
 	var instance : SVInstance!
 	
 	var frameTimer : Timer!
@@ -33,17 +33,10 @@ class ViewController: NSViewController {
 		let inputFile = Bundle.main.path(forResource: "input", ofType: "txt") ?? ""
 		self.instance = SVInputReader.readInput(inputFilename: inputFile)
 		
+		let outputFile = Bundle.main.path(forResource: "output", ofType: "txt") ?? ""
+		self.instance = SVOutputReader.updateInstanceWithOutput(instance: self.instance, outputFilename: outputFile)
 		
-//		// Problem Solver Code
-		let problemSolver = SVProblemSolver(instance: instance)
-		
-		problemSolver.runFatBoyRunAlgorithm()
-//		problemSolver.marathonAlgorithm()
-//		problemSolver.solveByStarCluster(numberOfClusters: kNumberOfClusters)
-		
-		print(problemSolver.outputStringForInstance())
-		
-		
+		instance.swarm[0].activate()
 		
 		// Visualiser
 		display = SVDisplayView(frame: self.view.frame , svFrame: frameFromInstance())
@@ -52,6 +45,17 @@ class ViewController: NSViewController {
 		self.view.addSubview(display)
 		self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[d]|", options: [], metrics: nil, views: ["d" : display]))
 		self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[d]|", options: [], metrics: nil, views: ["d" : display]))
+		
+		beginVisualisation()
+		
+		//		// Problem Solver Code
+		//		let problemSolver = SVProblemSolver(instance: instance)
+		//
+		////		problemSolver.runFatBoyRunAlgorithm()
+		////		problemSolver.marathonAlgorithm()
+		//		problemSolver.solveByStarCluster(numberOfClusters: kNumberOfClusters)
+		//
+		//		print(problemSolver.outputStringForInstance())
 		
 	}
 	
@@ -82,33 +86,64 @@ class ViewController: NSViewController {
 	
 	func updateInstance() {
 		
+		for robot in instance.swarm where robot.isActive {
+			
+			if robot.pathIndex < robot.path.count - 1 {
+				
+				let target = robot.path![robot.pathIndex + 1]
+				
+				var dx = (target.x - robot.path[robot.pathIndex].x) / 50
+				var dy = (target.y - robot.path[robot.pathIndex].y) / 50
+				
+//				let m = dy / dx
+//				dy = dy / sqrt(pow(dy,2) + pow(dx,2))
+//				dx = dx / sqrt(pow(dy,2) + pow(dx,2))
+				
+				
+//				dx = dx * scaleFactor
+//				dy = dy * scaleFactor
+				
+				robot.current = SVPoint(x: robot.current.x + dx, y: robot.current.y + dy)
+				
+				for rob in instance.swarm where !rob.isActive {
+					if robot.current == rob.current {
+						rob.activate()
+					}
+				}
+				if robot.current == target {
+					robot.pathIndex = robot.pathIndex + 1
+				}
+			}
+		}
 		
 	}
 
 	
 	func frameFromInstance() -> SVFrame {
 		
-		var roboPoints = [SVPoint]()
-		
-		for robot in instance.swarm {
-//			roboPoints.append(robot.current)
-			roboPoints.append(robot.start)
-		}
-		
 		var lines = [SVEdge]()
 		
+		var roboPoints = [SVRobotFrame]()
+		
 		for robot in instance.swarm {
 			
-			if robot.path.count > 1 {
-				
-				for i in 0 ..< robot.path.count - 1 {
-					
-					lines.append((robot.path[i],robot.path[i+1]))
-					
-				}
-			}
-			
+			roboPoints.append((robot.current,robot.isActive,robot.index))
 		}
+		
+		
+		
+//		for robot in instance.swarm {
+//			
+//			if robot.path.count > 1 {
+//				
+//				for i in 0 ..< robot.path.count - 1 {
+//					
+//					lines.append((robot.path[i],robot.path[i+1]))
+//					
+//				}
+//			}
+//			
+//		}
 		
 		return (roboPoints,instance.map, lines)
 	}

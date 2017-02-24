@@ -10,6 +10,8 @@ import Cocoa
 
 class SVDisplayView: NSView {
 	
+	var frameNumber = 0
+	
 	
 	let kWindowTitleHeight : CGFloat = 20
 	
@@ -76,6 +78,7 @@ class SVDisplayView: NSView {
 	func updateWithFrame(frame: SVFrame) {
 		self.originalFrame = frame
 		self.updateView()
+		self.frameNumber += 1
 	}
 	
 	func updateView() {
@@ -88,13 +91,13 @@ class SVDisplayView: NSView {
 	func setMinsAndMaxsForFrame(frame: SVFrame) {
 		
 		let startRobot = frame.robots[0]
-		minx = CGFloat(startRobot.x)
-		miny = CGFloat(startRobot.y)
-		maxx = CGFloat(startRobot.x)
-		maxy = CGFloat(startRobot.y)
+		minx = CGFloat(startRobot.point.x)
+		miny = CGFloat(startRobot.point.y)
+		maxx = CGFloat(startRobot.point.x)
+		maxy = CGFloat(startRobot.point.y)
 		
 		for robot in frame.robots {
-			compareMinMaxForPoint(point: robot)
+			compareMinMaxForPoint(point: robot.point)
 		}
 		
 		for obstacle in frame.obstacles {
@@ -122,8 +125,8 @@ class SVDisplayView: NSView {
 	
 	func scaleFrame(frame: SVFrame) -> SVFrame {
 		
-		let robots = frame.robots.map({ (p:SVPoint) -> SVPoint in
-			scaleCoordinate(coord: p)
+		let robots = frame.robots.map({ (p:SVRobotFrame) -> SVRobotFrame in
+			(scaleCoordinate(coord: p.point),p.isActive,p.index)
 		})
 		
 		let obstacles = frame.obstacles.map { (p: SVPolygon) -> SVPolygon in
@@ -165,15 +168,23 @@ class SVDisplayView: NSView {
 	func drawFrame() {
 		
 		for obstacle in displayFrame.obstacles {
-			drawObstacle(obstacle: obstacle, colour: SVDesign.colourRed())
+			drawObstacle(obstacle: obstacle, colour: SVDesign.colourBlur())
 		}
 		
 		for line in displayFrame.lines {
 			drawLine(startx: CGFloat(line.0.x), starty: CGFloat(line.0.y), endx: CGFloat(line.1.x), endy: CGFloat(line.1.y), colour: SVDesign.colourGreen())
 		}
 		
+		let colours = [SVDesign.colourRed(),SVDesign.colourOrange(),SVDesign.colourYellow(),SVDesign.colourGreen(),SVDesign.colourBlue(),SVDesign.colourPurple()]
+		
 		for robot in displayFrame.robots {
-			drawRobot(robot: robot, colour: SVDesign.colourBlue())
+			let colour = colours[robot.index % colours.count]
+			if robot.isActive {
+				drawRobot(robot: robot, colour: colour)
+			} else {
+				drawRobot(robot: robot, colour: SVDesign.colourGrey())
+			}
+			
 		}
 	}
 	
@@ -184,8 +195,23 @@ class SVDisplayView: NSView {
 		context.setStrokeColor(colour.cgColor)
 		context.setFillColor(colour.cgColor)
 		
-		context.addRect(CGRect(x: CGFloat(robot.x) - kRobotRadius, y: CGFloat(robot.y) - kRobotRadius, width: robotDiammeter, height: robotDiammeter))
-		context.drawPath(using: .fillStroke)
+		
+		if robot.isActive && (frameNumber % 10 > 5) {
+			let poly = [SVPoint(x: robot.point.x - Double(kRobotRadius), y: robot.point.y),
+			            SVPoint(x: robot.point.x, y: robot.point.y + Double(kRobotRadius)),
+			            SVPoint(x: robot.point.x + Double(kRobotRadius), y: robot.point.y),
+			            SVPoint(x: robot.point.x, y: robot.point.y - Double(kRobotRadius))]
+			
+			drawPolygon(polygon: poly, lineColour: colour, fillColour: colour)
+		} else {
+			context.addRect(CGRect(x: CGFloat(robot.point.x) - kRobotRadius, y: CGFloat(robot.point.y) - kRobotRadius, width: robotDiammeter, height: robotDiammeter))
+			context.drawPath(using: .fillStroke)
+			
+		}
+		
+		
+		
+		
 		
 	}
 	

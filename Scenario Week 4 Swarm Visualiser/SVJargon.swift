@@ -21,7 +21,7 @@ typealias SVObstacle = SVPolygon
 
 // Drawing
 typealias SVFramesPerSecond = Double
-typealias SVRobotFrame = SVPoint
+typealias SVRobotFrame = (point:SVPoint,isActive:Bool,index:Int)
 //typealias SVRobotFrame = (position:SVPoint,active:Bool)
 typealias SVObstacleFrame = SVPolygon
 typealias SVFrame = (robots: [SVRobotFrame], obstacles: [SVObstacleFrame], lines: [SVEdge])

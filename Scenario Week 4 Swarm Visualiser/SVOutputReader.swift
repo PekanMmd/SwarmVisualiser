@@ -10,9 +10,31 @@ import Foundation
 
 class SVOutputReader: SVIOReader {
 	
-	class func updateInstanceWithOutput(instance: SVInstance, outputFilename : String) {
+	class func updateInstanceWithOutput(instance: SVInstance, outputFilename : String) -> SVInstance {
 		
 		let ouput = getTextFromInputFile(filename: outputFilename)
+		let paths = separateBranchStringsFromTextFile(text: ouput)
+		let coordsList = paths.map { (str) -> [String] in
+			return separateBranchStringIntoCoordinates(rep: str)
+		}
+		let coordsDoubles = coordsList.map { (strs) -> [(Double,Double)] in
+			return strs.map({ (str) -> (Double,Double) in
+				return convertStringToCoordinates(rep: str)
+			})
+		}
+		let robots = instance.swarm
+		for robot in robots {
+			
+			for coords in coordsDoubles {
+				if SVPoint(x: coords[0].0,y: coords[0].1) == robot.start {
+					robot.path = coords.map({ (p: (x:Double, y:Double)) -> SVPoint in
+						return SVPoint(x: p.x, y: p.y)
+					})
+				}
+			}
+		}
+		
+		return (robots, instance.map)
 		
 	}
 	
@@ -21,7 +43,6 @@ class SVOutputReader: SVIOReader {
 	}
 	
 	private class func separateBranchStringIntoCoordinates(rep: String) -> [String] {
-		
 		return separateCoordinateListString(rep: rep)
 	}
 	
