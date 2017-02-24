@@ -608,10 +608,13 @@ class SVPathTableBuilder: NSObject {
 		return points
 	}
 	
-	func onePointPathBetweenPoints(pointA : SVPoint, pointB: SVPoint) -> SVPath! {
+	func onePointPathBetweenPoints(pointA : SVPoint, pointB: SVPoint, visited: [SVPoint]) -> SVPath! {
 		var pathToIntersect : SVPath!
 		
 		for p in pointsFromEdges(edges: allEdges) {
+			if visited.contains(p) {
+				continue
+			}
 			if point(p1: pointA, isVisibleFromPoint: p, prioritiseAdjacents: false) {
 				if point(p1: pointB, isVisibleFromPoint: p, prioritiseAdjacents: false) {
 					pathToIntersect = [p,pointB]
@@ -622,6 +625,7 @@ class SVPathTableBuilder: NSObject {
 		
 		return pathToIntersect
 	}
+	
 	
 //	func nPointPathBetweenPoints(pointA : SVPoint, pointB: SVPoint) -> SVPath! {
 //		var pathToIntersect : SVPath!
@@ -637,7 +641,7 @@ class SVPathTableBuilder: NSObject {
 //		
 //		return pathToIntersect
 //	}
-
+	
 	
 	func pathBetweenPoints(p1: SVPoint, p2: SVPoint, optimised: Bool, visited: [SVPoint]) -> SVPath? {
 		var closestIntersects : [SVPoint]!
@@ -675,11 +679,20 @@ class SVPathTableBuilder: NSObject {
 				pathToIntersect = [intersect]
 			} else {
 				// find one step path to intersect
-				let oneStop = onePointPathBetweenPoints(pointA: p1, pointB: intersect)
+				let oneStop = onePointPathBetweenPoints(pointA: p1, pointB: intersect, visited: [])
 				if oneStop != nil {
 					pathToIntersect = oneStop!
 				} else {
-					pathToIntersect = pathBetweenPoints(p1: p1, p2: intersect, optimised: optimised, visited: visited + [intersect])
+					for p in pointsFromEdges(edges: allEdges) {
+						if pathToIntersect == nil {
+							let oneStop = onePointPathBetweenPoints(pointA: p1, pointB: intersect, visited: visited)
+							if oneStop != nil {	pathToIntersect = pathBetweenPoints(p1: p1, p2: p, optimised: optimised, visited: visited + oneStop!)
+								if pathToIntersect != nil {
+									pathToIntersect = pathToIntersect! + oneStop!
+								}
+							}
+						}
+					}
 				}
 			}
 			
@@ -715,7 +728,8 @@ class SVPathTableBuilder: NSObject {
 			
 		}
 		
-		print("this is NOT good")
+		
+		print("this is not the end of the world")
 		return [p2]
 		
 	}
