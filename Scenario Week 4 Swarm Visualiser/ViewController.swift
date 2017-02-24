@@ -8,8 +8,15 @@
 
 import Cocoa
 
-let kNumberOfClusters      : Int    = 8
-let kIntersectionGradation : Double = 10
+// Algorithm Constants
+let kNumberOfClusters				: Int    = 8
+let kIntersectionGradation			: Double = 100
+let kIntersectionSkip				: Double = 50
+let kPrioritiseAdjacentPaths		: Bool	 = true
+
+//  Not used yet
+let kStarClusterPrioritiseAdjacent	: Bool	 = false
+let kStarClusterNoChill				: Bool	 = false
 
 class ViewController: NSViewController {
 	

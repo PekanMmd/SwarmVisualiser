@@ -54,15 +54,16 @@ class SVPathTableBuilder: NSObject {
 		return edges
 	}
 	
-	func pointsFromEdge(edge: SVEdge) -> [SVPoint] {
-		return [edge.0,edge.1]
-	}
+//	func pointsFromEdge(edge: SVEdge) -> [SVPoint] {
+//		return [edge.0,edge.1]
+//	}
 	
 	func pointsFromEdges(edges: [SVEdge]) -> [SVPoint] {
 		var points = [SVPoint]()
 		
 		for edge in edges {
-			points += pointsFromEdge(edge: edge)
+//			points += pointsFromEdge(edge: edge)
+			points += [edge.0]
 		}
 		
 		return points
@@ -97,7 +98,7 @@ class SVPathTableBuilder: NSObject {
 		let dy : Double = edge.1.y - edge.0.y
 		var points = [SVPoint]()
 		
-		for i in 1 ..< Int(number) - 1 {
+		for i in Int(number/kIntersectionSkip) ..< (Int(number) - Int(number/kIntersectionSkip)) {
 			
 			let midX = dx * checkThreshold * Double(i) + edge.0.x
 			let midY = dy * checkThreshold * Double(i) + edge.0.y
@@ -315,7 +316,55 @@ class SVPathTableBuilder: NSObject {
 		return sqrt(dx2 + dy2)
 	}
 	
-	func point(p1: SVPoint, isVisibleFromPoint p2: SVPoint) -> Bool {
+	func pointsAreOnSamePolygon(p1: SVPoint, p2: SVPoint) -> Bool {
+		
+		for obstacle in instance.map {
+			var match1 = false
+			var match2 = false
+			
+			for p in obstacle {
+				if p == p1 {
+					match1 = true
+				}
+				if p == p2 {
+					match2 = true
+				}
+			}
+			if match1 && match2 {
+				return true
+			}
+		}
+		return false
+		
+	}
+
+	
+	func pointsAreOnSameEdge(p1: SVPoint, p2: SVPoint) -> Bool {
+		
+		for edge in allEdges {
+			
+			if (edge.0 == p1 && edge.1 == p2) || (edge.0 == p2 && edge.1 == p1) {
+				return true
+			}
+			
+		}
+		return false
+		
+	}
+	
+	func point(p1: SVPoint, isVisibleFromPoint p2: SVPoint, prioritiseAdjacents adj: Bool) -> Bool {
+		
+		if adj {
+			if pointsAreOnSamePolygon(p1: p1, p2: p2) {
+				return pointsAreOnSameEdge(p1: p1, p2: p2)
+			}
+		}
+		
+		if corners.contains(p1) && corners.contains(p2) {
+			if pointsAreOnSameEdge(p1: p1, p2: p2) {
+				return true
+			}
+		}
 		
 		for polygon in instance.map {
 			if doesLine(line: (p1,p2), PassThroughPolygon: polygon) {
@@ -323,74 +372,13 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
-//		if  pointIsACorner(p: p1) && pointIsACorner(p: p2) {
-//			for polygon in instance.map {
-//				
-//				if polygon.contains(p1) && polygon.contains(p2) {
-//					if doesLine(line: (p1,p2), PassThroughPolygon: polygon) {
-//						return false
-//					}
-//				}
-//			}
-//		}
-//		
-//		for edge in allEdges {
-//			if doesLine(line: (p1,p2), intersectEdge: edge) {
-//				return false
-//			}
-//		}
 		
 		return true
 		
 	}
 	
-	func lineBetweenPointsClosestPointFromIntersectedPolygonsDirty(p1: SVPoint, p2: SVPoint) -> SVPoint? {
-		
-		let line = (p1,p2)
-		var edges = edgesIntersectedByLine(line: line)
-		
-		for polygon in instance.map {
-			var edgeList = [SVEdge]()
-			
-			for p in 0 ..< polygon.count - 1 {
-				edgeList.append((polygon[p],polygon[p+1]))
-			}
-			
-			edgeList.append((polygon.last!,polygon.first!))
-			
-			var polyAdded = false
-			
-			for edge in edgeList {
-				
-				if !polyAdded {
-					
-					for e in edges {
-						if e == edge {
-							edges += edgeList
-							polyAdded = true
-						}
-					}
-				}
-			}
-			
-		}
-		
-		let points = pointsFromEdges(edges: edges)
-		
-		if points.count == 0 {
-			return nil
-		}
-		
-		for p in points {
-			if point(p1: p, isVisibleFromPoint: p1) {
-				return p
-			}
-		}
-		
-		return nil
-	}
 	
-	func lineBetweenPointsClosestPointFromIntersectedPolygons(p1: SVPoint, p2: SVPoint, visited: [SVPoint]) -> SVPoint? {
+	func lineBetweenPointsClosestPointsFromIntersectedPolygons(p1: SVPoint, p2: SVPoint, visited: [SVPoint]) -> [SVPoint]? {
 		
 		let line = (p1,p2)
 		var edges = edgesIntersectedByLine(line: line)
@@ -437,11 +425,11 @@ class SVPathTableBuilder: NSObject {
 		}
 		
 		points = points.filter({ (p:SVPoint) -> Bool in
-			return point(p1: p, isVisibleFromPoint: p1)
+			return point(p1: p, isVisibleFromPoint: p1, prioritiseAdjacents: kPrioritiseAdjacentPaths)
 		})
 		
 		if points.count == 0 {
-			print("something went wrong...")
+			print("something went wrong. back tracking...")
 			return nil
 		}
 		
@@ -449,42 +437,62 @@ class SVPathTableBuilder: NSObject {
 			return distanceBetweenPoints(p1: p2, p2: point1) < distanceBetweenPoints(p1: p2, p2: point2)
 		})
 		
-		return points[0]
+		return points
 	}
 	
-	func pathBetweenPoints(p1: SVPoint, p2: SVPoint, optimised: Bool, visited: [SVPoint]) -> SVPath {
-		var closestIntersect : SVPoint!
-		
-		if optimised {
-			closestIntersect = lineBetweenPointsClosestPointFromIntersectedPolygons(p1: p1, p2: p2, visited: visited)
-		} else {
-			closestIntersect = lineBetweenPointsClosestPointFromIntersectedPolygonsDirty(p1: p1, p2: p2)
-		}
-		
+	func pathBetweenPoints(p1: SVPoint, p2: SVPoint, optimised: Bool, visited: [SVPoint]) -> SVPath? {
+		var closestIntersects : [SVPoint]!
 		var path = [p2]
 		
-		if closestIntersect != nil {
+		if pointsAreOnSameEdge(p1: p1, p2: p2) {
+			path = [p2]
+			pathTable.append((p1,p2,path))
+			return path
+		}
+		
+		if point(p1: p2, isVisibleFromPoint: p1, prioritiseAdjacents: kPrioritiseAdjacentPaths) {
+			path = [p2]
+			pathTable.append((p1,p2,path))
+			return path
+		}
+		
+		closestIntersects = lineBetweenPointsClosestPointsFromIntersectedPolygons(p1: p1, p2: p2, visited: visited)
+		
+		if closestIntersects == nil {
+			return nil
+		}
+		
+		for intersect in closestIntersects! {
 			
-			let pathToAdd = [closestIntersect!] + pathBetweenPoints(p1: closestIntersect!, p2: p2, optimised: optimised, visited: visited + [closestIntersect!])
+			var pathToAdd = pathBetweenPoints(p1: intersect, p2: p2, optimised: optimised, visited: visited + [intersect])
+			
+			if pathToAdd == nil {
+				continue
+			}
+			
+			pathToAdd = [intersect] + pathToAdd!
 			
 			var furthestVisible = 0
 			
-			for p in 0 ..< pathToAdd.count {
-				if point(p1: pathToAdd[p], isVisibleFromPoint: p1) {
+			for p in 0 ..< pathToAdd!.count {
+				if point(p1: pathToAdd![p], isVisibleFromPoint: p1, prioritiseAdjacents: false) {
 					furthestVisible = p
 				}
 			}
 			
 			var optimisedPath = SVPath()
-			for i in furthestVisible ..< pathToAdd.count {
-				optimisedPath.append(pathToAdd[i])
+			for i in furthestVisible ..< pathToAdd!.count {
+				optimisedPath.append(pathToAdd![i])
 			}
 			
 			path = optimisedPath
+			
+			pathTable.append((p1,p2,path))
+			return path
+			
 		}
 		
-		pathTable.append((p1,p2,path))
-		return path
+		return nil
 		
 	}
 	
@@ -508,7 +516,7 @@ class SVPathTableBuilder: NSObject {
 			for target in instance.swarm {
 				
 				if robot.start != target.start {
-					table.append((robot.start,target.start,pathBetweenPoints(p1: robot.start, p2: target.start, optimised: true, visited: [robot.start])))
+					table.append((robot.start,target.start,pathBetweenPoints(p1: robot.start, p2: target.start, optimised: true, visited: [robot.start])!))
 				}
 				
 			}
