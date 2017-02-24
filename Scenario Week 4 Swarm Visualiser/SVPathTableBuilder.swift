@@ -372,6 +372,11 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
+		for edge in allEdges {
+			if doesLine(line: (p1,p2), intersectEdge: edge) {
+				return false
+			}
+		}
 		
 		return true
 		

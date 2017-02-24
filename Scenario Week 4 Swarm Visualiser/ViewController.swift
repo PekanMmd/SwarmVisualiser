@@ -9,9 +9,9 @@
 import Cocoa
 
 // Algorithm Constants
-let kNumberOfClusters				: Int    = 8
-let kIntersectionGradation			: Double = 100
-let kIntersectionSkip				: Double = 50
+let kNumberOfClusters				: Int    = 15
+let kIntersectionGradation			: Double = 50
+let kIntersectionSkip				: Double = 25
 let kPrioritiseAdjacentPaths		: Bool	 = true
 
 //  Not used yet
@@ -38,8 +38,8 @@ class ViewController: NSViewController {
 		let problemSolver = SVProblemSolver(instance: instance)
 		
 //		problemSolver.runFatBoyRunAlgorithm()
-//		problemSolver.marathonAlgorithm()
-		problemSolver.solveByStarCluster(numberOfClusters: kNumberOfClusters)
+		problemSolver.marathonAlgorithm()
+//		problemSolver.solveByStarCluster(numberOfClusters: kNumberOfClusters)
 		
 		print(problemSolver.outputStringForInstance())
 		
