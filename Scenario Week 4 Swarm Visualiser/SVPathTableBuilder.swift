@@ -608,6 +608,37 @@ class SVPathTableBuilder: NSObject {
 		return points
 	}
 	
+	func onePointPathBetweenPoints(pointA : SVPoint, pointB: SVPoint) -> SVPath! {
+		var pathToIntersect : SVPath!
+		
+		for p in pointsFromEdges(edges: allEdges) {
+			if point(p1: pointA, isVisibleFromPoint: p, prioritiseAdjacents: false) {
+				if point(p1: pointB, isVisibleFromPoint: p, prioritiseAdjacents: false) {
+					pathToIntersect = [p,pointB]
+					break
+				}
+			}
+		}
+		
+		return pathToIntersect
+	}
+	
+//	func nPointPathBetweenPoints(pointA : SVPoint, pointB: SVPoint) -> SVPath! {
+//		var pathToIntersect : SVPath!
+//		
+//		for p in pointsFromEdges(edges: allEdges) {
+//			if point(p1: pointA, isVisibleFromPoint: p, prioritiseAdjacents: false) {
+//				if point(p1: pointB, isVisibleFromPoint: p, prioritiseAdjacents: false) {
+//					pathToIntersect = [p,pointB]
+//					break
+//				}
+//			}
+//		}
+//		
+//		return pathToIntersect
+//	}
+
+	
 	func pathBetweenPoints(p1: SVPoint, p2: SVPoint, optimised: Bool, visited: [SVPoint]) -> SVPath? {
 		var closestIntersects : [SVPoint]!
 		var path = [p2]
@@ -644,13 +675,11 @@ class SVPathTableBuilder: NSObject {
 				pathToIntersect = [intersect]
 			} else {
 				// find one step path to intersect
-				for p in pointsFromEdges(edges: allEdges) {
-					if point(p1: p1, isVisibleFromPoint: p, prioritiseAdjacents: false) {
-						if point(p1: p, isVisibleFromPoint: intersect, prioritiseAdjacents: false) {
-							pathToIntersect = [p,intersect]
-							break
-						}
-					}
+				let oneStop = onePointPathBetweenPoints(pointA: p1, pointB: intersect)
+				if oneStop != nil {
+					pathToIntersect = oneStop!
+				} else {
+					pathToIntersect = pathBetweenPoints(p1: p1, p2: intersect, optimised: optimised, visited: visited + [intersect])
 				}
 			}
 			
@@ -686,7 +715,8 @@ class SVPathTableBuilder: NSObject {
 			
 		}
 		
-		return nil
+		print("this is NOT good")
+		return [p2]
 		
 	}
 	
