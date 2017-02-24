@@ -11,7 +11,7 @@ import Cocoa
 // Algorithm Constants
 let kNumberOfClusters				: Int    = 15
 let kIntersectionGradation			: Double = 50
-let kIntersectionSkip				: Double = 25
+let kIntersectionSkip				: Double = 50
 let kPrioritiseAdjacentPaths		: Bool	 = true
 
 //  Not used yet

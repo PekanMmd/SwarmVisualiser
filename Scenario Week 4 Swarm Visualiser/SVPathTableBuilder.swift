@@ -180,6 +180,12 @@ class SVPathTableBuilder: NSObject {
 			}
 		}
 		
+		for edge in edges {
+			if doesLine(line: line, intersectEdge: edge) {
+				return true
+			}
+		}
+		
 		let checkpoints = checkPointsForLine(edge: line, number: kIntersectionGradation)
 		
 		for checkpoint in checkpoints {
@@ -243,7 +249,7 @@ class SVPathTableBuilder: NSObject {
 		if A1 == nil {
 			Xa = line.0.x
 			
-			if (Xa == edge.0.x) || (Xa == edge.0.x) {
+			if (compareDoubles(d1: Xa, d2: edge.0.x)) || (compareDoubles(d1: Xa, d2: edge.1.x)) {
 				return nil
 			}
 			
@@ -251,12 +257,12 @@ class SVPathTableBuilder: NSObject {
 			let y = A2 * Xa + b2
 			let Iy = minMaxYForEdge(edge: line)
 			
-			return (Iy.0 <= y) && (y <= Iy.1) ? Xa : nil
+			return (Iy.0 < y) && (y < Iy.1) ? Xa : nil
 			
 		} else if A2 == nil {
 			Xa = edge.0.x
 			
-			if (Xa == line.0.x) || (Xa == line.1.x) {
+			if (compareDoubles(d1: Xa, d2: line.0.x)) || (compareDoubles(d1: Xa, d2: line.1.x)) {
 				return nil
 			}
 			
@@ -264,7 +270,7 @@ class SVPathTableBuilder: NSObject {
 			let y = A1 * Xa + b1
 			let Iy = minMaxYForEdge(edge: edge)
 			
-			return (Iy.0 <= y) && (y <= Iy.1) ? Xa : nil
+			return (Iy.0 < y) && (y < Iy.1) ? Xa : nil
 			
 		} else {
 			
@@ -274,6 +280,11 @@ class SVPathTableBuilder: NSObject {
 			Xa = (b2 - b1) / (A1 - A2)
 			
 		}
+		
+		if (compareDoubles(d1: Xa, d2: line.0.x)) || (compareDoubles(d1: Xa, d2: line.1.x)) || (compareDoubles(d1: Xa, d2: edge.0.x)) || (compareDoubles(d1: Xa, d2: edge.1.x)) {
+			return nil
+		}
+		
 		
 		return ((Ia.0 < Xa) && (Xa < Ia.1)) ? Xa : nil
 		
@@ -316,7 +327,7 @@ class SVPathTableBuilder: NSObject {
 		return sqrt(dx2 + dy2)
 	}
 	
-	func pointsAreOnSamePolygon(p1: SVPoint, p2: SVPoint) -> Bool {
+	func cornersAreOnSamePolygon(p1: SVPoint, p2: SVPoint) -> Bool {
 		
 		for obstacle in instance.map {
 			var match1 = false
@@ -343,7 +354,7 @@ class SVPathTableBuilder: NSObject {
 		
 		for edge in allEdges {
 			
-			if (edge.0 == p1 && edge.1 == p2) || (edge.0 == p2 && edge.1 == p1) {
+			if point(point: p1, impingesOnEdge: edge) && point(point: p2, impingesOnEdge: edge) {
 				return true
 			}
 			
@@ -352,15 +363,75 @@ class SVPathTableBuilder: NSObject {
 		
 	}
 	
+	func point(point: SVPoint, impingesOnEdge edge: SVEdge) -> Bool {
+		
+		if (point == edge.0) || (point == edge.1) {
+			return true
+		}
+		
+		if point.x < min(edge.0.x, edge.1.x) {
+			return false
+		}
+		
+		if max(edge.0.x, edge.1.x) < point.x {
+			return false
+		}
+		
+		if point.y < min(edge.0.y, edge.1.y) {
+			return false
+		}
+		
+		if max(edge.0.y, edge.1.y) < point.y {
+			return false
+		}
+		
+		let Ia = (point.x,point.x)
+		
+		var A1 : Double!
+		var b1 : Double = 0
+		
+		if !lineIsVertical(line: edge) {
+			A1 = (edge.0.y - edge.1.y) / (edge.0.x - edge.1.x)
+		}
+		
+		var Xa : Double!
+		
+		if A1 == nil {
+			Xa = edge.0.x
+			
+			if point.x != Xa {
+				return false
+			}
+			
+			let y = point.y
+			let Iy = minMaxYForEdge(edge: edge)
+			
+			if compareDoubles(d1: point.y, d2: Iy.0) || compareDoubles(d1: point.y, d2: Iy.1) {
+				return true
+			}
+			
+			return (Iy.0 <= y) && (y <= Iy.1)
+			
+		} else {
+			
+			let x = point.x
+			let y = point.y
+			
+			let m = A1
+			let c = edge.0.y - (A1 * edge.0.x)
+			
+			//y = mx + c
+			return compareDoubles(d1: y, d2: (m! * x + c))
+			
+		}
+		
+	}
+	
 	func point(p1: SVPoint, isVisibleFromPoint p2: SVPoint, prioritiseAdjacents adj: Bool) -> Bool {
 		
 		if adj {
-			if pointsAreOnSamePolygon(p1: p1, p2: p2) {
-				return pointsAreOnSameEdge(p1: p1, p2: p2)
-			}
-		}
-		
-		if corners.contains(p1) && corners.contains(p2) {
+			return pointsAreOnSameEdge(p1: p1, p2: p2)
+		} else if corners.contains(p1) && corners.contains(p2) {
 			if pointsAreOnSameEdge(p1: p1, p2: p2) {
 				return true
 			}
@@ -402,9 +473,7 @@ class SVPathTableBuilder: NSObject {
 			
 			if !polyAdded {
 				for edge in edgeList {
-					
 					if !polyAdded {
-						
 						for e in edges {
 							if !polyAdded {
 								if e == edge {
@@ -430,7 +499,7 @@ class SVPathTableBuilder: NSObject {
 		}
 		
 		points = points.filter({ (p:SVPoint) -> Bool in
-			return point(p1: p, isVisibleFromPoint: p1, prioritiseAdjacents: kPrioritiseAdjacentPaths)
+			return point(p1: p, isVisibleFromPoint: p1, prioritiseAdjacents: false)
 		})
 		
 		if points.count == 0 {
