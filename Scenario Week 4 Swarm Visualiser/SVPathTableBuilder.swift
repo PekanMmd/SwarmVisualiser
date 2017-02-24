@@ -327,6 +327,36 @@ class SVPathTableBuilder: NSObject {
 		return sqrt(dx2 + dy2)
 	}
 	
+	func pointsAreOnSamePolygon(p1: SVPoint, p2: SVPoint) -> Bool {
+		
+		for polygon in instance.map {
+			
+			var edges = [SVEdge]()
+			
+			for p in 0 ..< polygon.count - 1 {
+				edges.append((polygon[p],polygon[p+1]))
+			}
+			
+			edges.append((polygon.last!,polygon.first!))
+			
+			var m1 = false
+			var m2 = false
+			
+			for edge in edges {
+				if point(point: p1, impingesOnEdge: edge) {
+					m1 = true
+				}
+				if point(point: p2, impingesOnEdge: edge) {
+					m2 = true
+				}
+				
+			}
+			return m1 && m2
+		}
+		return false
+		
+	}
+	
 	func cornersAreOnSamePolygon(p1: SVPoint, p2: SVPoint) -> Bool {
 		
 		for obstacle in instance.map {
@@ -348,7 +378,6 @@ class SVPathTableBuilder: NSObject {
 		return false
 		
 	}
-
 	
 	func pointsAreOnSameEdge(p1: SVPoint, p2: SVPoint) -> Bool {
 		
@@ -369,6 +398,22 @@ class SVPathTableBuilder: NSObject {
 			return true
 		}
 		
+		if compareDoubles(d1: point.x, d2: min(edge.0.x, edge.1.x)) {
+			return false
+		}
+		
+		if compareDoubles(d1: point.x, d2: max(edge.0.x, edge.1.x)) {
+			return false
+		}
+		
+		if compareDoubles(d1: point.y, d2: min(edge.0.y, edge.1.y)) {
+			return false
+		}
+		
+		if compareDoubles(d1: point.y, d2: max(edge.0.y, edge.1.y)) {
+			return false
+		}
+		
 		if point.x < min(edge.0.x, edge.1.x) {
 			return false
 		}
@@ -385,10 +430,7 @@ class SVPathTableBuilder: NSObject {
 			return false
 		}
 		
-		let Ia = (point.x,point.x)
-		
 		var A1 : Double!
-		var b1 : Double = 0
 		
 		if !lineIsVertical(line: edge) {
 			A1 = (edge.0.y - edge.1.y) / (edge.0.x - edge.1.x)
@@ -399,7 +441,7 @@ class SVPathTableBuilder: NSObject {
 		if A1 == nil {
 			Xa = edge.0.x
 			
-			if point.x != Xa {
+			if !compareDoubles(d1: point.x, d2: Xa) {
 				return false
 			}
 			
@@ -417,11 +459,11 @@ class SVPathTableBuilder: NSObject {
 			let x = point.x
 			let y = point.y
 			
-			let m = A1
-			let c = edge.0.y - (A1 * edge.0.x)
+			let m = A1!
+			let c = edge.0.y - (m * edge.0.x)
 			
 			//y = mx + c
-			return compareDoubles(d1: y, d2: (m! * x + c))
+			return compareDoubles(d1: y, d2: (m * x + c))
 			
 		}
 		
@@ -430,7 +472,9 @@ class SVPathTableBuilder: NSObject {
 	func point(p1: SVPoint, isVisibleFromPoint p2: SVPoint, prioritiseAdjacents adj: Bool) -> Bool {
 		
 		if adj {
-			return pointsAreOnSameEdge(p1: p1, p2: p2)
+			if pointsAreOnSamePolygon(p1: p1, p2: p2) {
+				return pointsAreOnSameEdge(p1: p1, p2: p2)
+			}
 		} else if corners.contains(p1) && corners.contains(p2) {
 			if pointsAreOnSameEdge(p1: p1, p2: p2) {
 				return true
@@ -453,6 +497,20 @@ class SVPathTableBuilder: NSObject {
 		
 	}
 	
+	func edgesFromObstacle(obstacle: SVObstacle) -> [SVEdge] {
+		
+		var edges = [SVEdge]()
+		
+		for p in 0 ..< obstacle.count - 1 {
+			edges.append((obstacle[p],obstacle[p+1]))
+		}
+		
+		edges.append((obstacle.last!,obstacle.first!))
+		
+		return edges
+		
+	}
+	
 	
 	func lineBetweenPointsClosestPointsFromIntersectedPolygons(p1: SVPoint, p2: SVPoint, visited: [SVPoint]) -> [SVPoint]? {
 		
@@ -460,6 +518,22 @@ class SVPathTableBuilder: NSObject {
 		var edges = edgesIntersectedByLine(line: line)
 		var polyedges = [SVEdge]()
 		
+		for ob in instance.map {
+			
+			let edgeList = edgesFromObstacle(obstacle: ob)
+			
+			for edge in edgeList {
+				if point(point: p2, impingesOnEdge: edge) {
+					edges = edges + [edge]
+				}
+				if point(point: p1, impingesOnEdge: edge) {
+					edges = edges + [edge]
+					break
+				}
+			}
+			
+		}
+	
 		for polygon in instance.map {
 			var edgeList = [SVEdge]()
 			
@@ -499,7 +573,7 @@ class SVPathTableBuilder: NSObject {
 		}
 		
 		points = points.filter({ (p:SVPoint) -> Bool in
-			return point(p1: p, isVisibleFromPoint: p1, prioritiseAdjacents: false)
+			return point(p1: p, isVisibleFromPoint: p1, prioritiseAdjacents: kPrioritiseAdjacentPaths)
 		})
 		
 		if points.count == 0 {
