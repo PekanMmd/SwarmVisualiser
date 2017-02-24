@@ -573,6 +573,7 @@ class SVPathTableBuilder: NSObject {
 		var points = pointsFromEdges(edges: edges)
 		
 		if points.count == 0 {
+			print("something went wrong. back tracking...")
 			return nil
 		}
 		
@@ -585,13 +586,14 @@ class SVPathTableBuilder: NSObject {
 		})
 		
 		if points.count == 0 {
-			print("something went wrong. back tracking...")
-			return nil
+			points = pointsFromEdges(edges: edges).sorted(by: { (point1:SVPoint, point2:SVPoint) -> Bool in
+				return distanceBetweenPoints(p1: p1, p2: point1) < distanceBetweenPoints(p1: p1, p2: point2)
+			})
+		} else {
+			points = points.sorted(by: { (point1:SVPoint, point2:SVPoint) -> Bool in
+				return distanceBetweenPoints(p1: p2, p2: point1) < distanceBetweenPoints(p1: p2, p2: point2)
+			})
 		}
-		
-		points = points.sorted(by: { (point1:SVPoint, point2:SVPoint) -> Bool in
-			return distanceBetweenPoints(p1: p2, p2: point1) < distanceBetweenPoints(p1: p2, p2: point2)
-		})
 		
 		return points
 	}
@@ -626,7 +628,13 @@ class SVPathTableBuilder: NSObject {
 				continue
 			}
 			
-			pathToAdd = [intersect] + pathToAdd!
+			let pathToIntersect = pathBetweenPoints(p1: p1, p2: intersect, optimised: optimised, visited: visited)
+			
+			if pathToIntersect == nil {
+				continue
+			}
+			
+			pathToAdd = pathToIntersect! + pathToAdd!
 			
 			var furthestVisible = 0
 			
