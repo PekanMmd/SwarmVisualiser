@@ -622,6 +622,10 @@ class SVPathTableBuilder: NSObject {
 		
 		for intersect in closestIntersects! {
 			
+			if intersect == p1 {
+				continue
+			}
+			
 			var pathToAdd = pathBetweenPoints(p1: intersect, p2: p2, optimised: optimised, visited: visited + [intersect])
 			
 			if pathToAdd == nil {
